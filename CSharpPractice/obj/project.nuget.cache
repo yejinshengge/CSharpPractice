@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "h42GBmRX4Ag/h6j2vxNF63N170urS72WN24HykoNYNNd7bsxo/GjGvXxGc7A0Rv2yIXxKl2W7n1toRc9N7SSqA==",
+  "success": true,
+  "projectFilePath": "D:\\Projects\\Rider_Projects\\CSharpPractice\\CSharpPractice\\CSharpPractice.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\10857\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.18\\microsoft.netcore.app.ref.6.0.18.nupkg.sha512",
+    "C:\\Users\\10857\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.18\\microsoft.windowsdesktop.app.ref.6.0.18.nupkg.sha512",
+    "C:\\Users\\10857\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.18\\microsoft.aspnetcore.app.ref.6.0.18.nupkg.sha512",
+    "C:\\Users\\10857\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\6.0.18\\microsoft.netcore.app.host.win-x64.6.0.18.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,2 @@
+D:\Projects\Rider_Projects\CSharpPractice\CSharpPractice\bin\Debug\net6.0\linux-x64\publish\CSharpPractice.pdb
+D:\Projects\Rider_Projects\CSharpPractice\CSharpPractice\bin\Debug\net6.0\linux-x64\publish\CSharpPractice
