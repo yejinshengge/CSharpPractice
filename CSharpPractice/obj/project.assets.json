@@ -8,19 +8,19 @@
     "net6.0": []
   },
   "packageFolders": {
-    "C:\\Users\\10857\\.nuget\\packages\\": {}
+    "/Users/yejinshengge/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Projects\\Rider_Projects\\CSharpPractice\\CSharpPractice\\CSharpPractice.csproj",
+      "projectUniqueName": "/Users/yejinshengge/Project/Rider_Project/CSharpPractice/CSharpPractice/CSharpPractice.csproj",
       "projectName": "CSharpPractice",
-      "projectPath": "D:\\Projects\\Rider_Projects\\CSharpPractice\\CSharpPractice\\CSharpPractice.csproj",
-      "packagesPath": "C:\\Users\\10857\\.nuget\\packages\\",
-      "outputPath": "D:\\Projects\\Rider_Projects\\CSharpPractice\\CSharpPractice\\obj\\",
+      "projectPath": "/Users/yejinshengge/Project/Rider_Project/CSharpPractice/CSharpPractice/CSharpPractice.csproj",
+      "packagesPath": "/Users/yejinshengge/.nuget/packages/",
+      "outputPath": "/Users/yejinshengge/Project/Rider_Project/CSharpPractice/CSharpPractice/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\10857\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "/Users/yejinshengge/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net6.0"
@@ -57,19 +57,15 @@
         "downloadDependencies": [
           {
             "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[6.0.18, 6.0.18]"
+            "version": "[6.0.20, 6.0.20]"
           },
           {
-            "name": "Microsoft.NETCore.App.Host.win-x64",
-            "version": "[6.0.18, 6.0.18]"
+            "name": "Microsoft.NETCore.App.Host.osx-arm64",
+            "version": "[6.0.20, 6.0.20]"
           },
           {
             "name": "Microsoft.NETCore.App.Ref",
-            "version": "[6.0.18, 6.0.18]"
-          },
-          {
-            "name": "Microsoft.WindowsDesktop.App.Ref",
-            "version": "[6.0.18, 6.0.18]"
+            "version": "[6.0.20, 6.0.20]"
           }
         ],
         "frameworkReferences": {
@@ -77,7 +73,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Users\\10857\\.dotnet\\sdk\\7.0.304\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/Users/yejinshengge/.dotnet/sdk/7.0.306/RuntimeIdentifierGraph.json"
       }
     }
   }

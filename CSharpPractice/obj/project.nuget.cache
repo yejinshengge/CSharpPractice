@@ -1,13 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "h42GBmRX4Ag/h6j2vxNF63N170urS72WN24HykoNYNNd7bsxo/GjGvXxGc7A0Rv2yIXxKl2W7n1toRc9N7SSqA==",
+  "dgSpecHash": "VjCEC8CuZ3EKptxluFayUYaH1OySakIgWhJV/AjBM8pByHLEtqyvxdIU/5S6jI8ek5ZybYGEWE2v6/Wl0jqnEQ==",
   "success": true,
-  "projectFilePath": "D:\\Projects\\Rider_Projects\\CSharpPractice\\CSharpPractice\\CSharpPractice.csproj",
+  "projectFilePath": "/Users/yejinshengge/Project/Rider_Project/CSharpPractice/CSharpPractice/CSharpPractice.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\10857\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.18\\microsoft.netcore.app.ref.6.0.18.nupkg.sha512",
-    "C:\\Users\\10857\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.18\\microsoft.windowsdesktop.app.ref.6.0.18.nupkg.sha512",
-    "C:\\Users\\10857\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.18\\microsoft.aspnetcore.app.ref.6.0.18.nupkg.sha512",
-    "C:\\Users\\10857\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\6.0.18\\microsoft.netcore.app.host.win-x64.6.0.18.nupkg.sha512"
+    "/Users/yejinshengge/.nuget/packages/microsoft.netcore.app.ref/6.0.20/microsoft.netcore.app.ref.6.0.20.nupkg.sha512",
+    "/Users/yejinshengge/.nuget/packages/microsoft.aspnetcore.app.ref/6.0.20/microsoft.aspnetcore.app.ref.6.0.20.nupkg.sha512",
+    "/Users/yejinshengge/.nuget/packages/microsoft.netcore.app.host.osx-arm64/6.0.20/microsoft.netcore.app.host.osx-arm64.6.0.20.nupkg.sha512"
   ],
   "logs": []
 }
