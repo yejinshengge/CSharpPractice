@@ -37,7 +37,10 @@ public static class Tools
         }
         Console.WriteLine();
     }
-
+    /// <summary>
+    /// 打印集合
+    /// </summary>
+    /// <param name="enumerable"></param>
     public static void PrintEnumerator(IEnumerable enumerable)
     {
         foreach (var item in enumerable)
@@ -49,6 +52,11 @@ public static class Tools
         }
         Console.WriteLine();
     }
+    /// <summary>
+    /// 打印二维数组
+    /// </summary>
+    /// <param name="arr"></param>
+    /// <typeparam name="T"></typeparam>
     public static void PrintArr<T>(T[][] arr)
     {
         Console.WriteLine();
@@ -73,7 +81,14 @@ public static class Tools
     {
         (arr[index1], arr[index2]) = (arr[index2], arr[index1]);
     }
-
+    
+    /// <summary>
+    /// 判断两数组是否相同
+    /// </summary>
+    /// <param name="arr1"></param>
+    /// <param name="arr2"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
     public static bool Equals<T>(T[] arr1, T[] arr2)
     {
         if (arr1.Length != arr2.Length) return false;
@@ -119,7 +134,10 @@ public static class Tools
         return root;
 
     }
-
+    /// <summary>
+    /// 前序遍历
+    /// </summary>
+    /// <param name="root"></param>
     public static void PreorderTree(TreeNode root)
     {
         if(root == null) return;
@@ -127,7 +145,10 @@ public static class Tools
         PreorderTree(root.left);
         PreorderTree(root.right);
     }
-    
+    /// <summary>
+    /// 中序遍历
+    /// </summary>
+    /// <param name="root"></param>
     public static void InorderTree(TreeNode root)
     {
         if(root == null) return;
@@ -135,7 +156,10 @@ public static class Tools
         Console.Write(root.val+" ");
         InorderTree(root.right);
     }
-    
+    /// <summary>
+    /// 后续遍历
+    /// </summary>
+    /// <param name="root"></param>
     public static void PostorderTree(TreeNode root)
     {
         if(root == null) return;
@@ -143,7 +167,10 @@ public static class Tools
         PostorderTree(root.right);
         Console.Write(root.val+" ");
     }
-
+    /// <summary>
+    /// 层序遍历
+    /// </summary>
+    /// <param name="root"></param>
     public static void SequenceTraversalTree(TreeNode root)
     {
         if(root == null) return;
@@ -169,5 +196,44 @@ public static class Tools
             }
         }
         Console.WriteLine();
+    }
+
+    /// <summary>
+    /// 构建二维数组
+    /// </summary>
+    /// <param name="str"></param>
+    /// <returns></returns>
+    public static int[][] ConstructTArray(string str)
+    {
+        List<int[]> res = new List<int[]>();
+        str = str.Substring(1, str.Length - 2);
+        int index = 0;
+        int startIndex = 0;
+        int endIndex = 0;
+        while (index < str.Length)
+        {
+            if (str[index] == '[')
+            {
+                startIndex = index + 1;
+            }
+            else if (str[index] == ']')
+            {
+                endIndex = index - 1;
+                if (endIndex - startIndex > 0)
+                {
+                    var arrStr = str.Substring(startIndex, endIndex - startIndex + 1);
+                    var arr = arrStr.Split(",");
+                    res.Add(new int[arr.Length]);
+                    for (int i = 0; i < arr.Length; i++)
+                    {
+                        res[^1][i]=int.Parse(arr[i]);
+                    }
+                }
+            }
+
+            index++;
+        }
+        
+        return res.ToArray();
     }
 }
