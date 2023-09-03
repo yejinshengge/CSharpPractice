@@ -28,7 +28,6 @@ public class LeetCode_0518
             for (int j = coins[i]; j <= amount; j++)
             {
                 dp[j] += dp[j - coins[i]];
-                Tools.PrintArr(dp);
             }
         }
 
