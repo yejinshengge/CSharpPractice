@@ -236,4 +236,32 @@ public static class Tools
         
         return res.ToArray();
     }
+
+    /// <summary>
+    /// 构造链表
+    /// </summary>
+    /// <param name="arr"></param>
+    /// <returns></returns>
+    public static ListNode ConstructLinkedList(int[] arr)
+    {
+        ListNode head = new ListNode();
+        ListNode cur = head;
+        for (int i = 0; i < arr.Length; i++)
+        {
+            ListNode node = new ListNode(arr[i]);
+            cur.next = node;
+            cur = node;
+        }
+        return head.next;
+    }
+
+    public static void PrintLinkedList(ListNode head)
+    {
+        while (head != null)
+        {
+            Console.Write(head.val + " ");
+            head = head.next;
+        }
+        Console.WriteLine();
+    }
 }
