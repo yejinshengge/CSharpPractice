@@ -219,7 +219,7 @@ public static class Tools
             else if (str[index] == ']')
             {
                 endIndex = index - 1;
-                if (endIndex - startIndex > 0)
+                if (endIndex - startIndex >= 0)
                 {
                     var arrStr = str.Substring(startIndex, endIndex - startIndex + 1);
                     var arr = arrStr.Split(",");

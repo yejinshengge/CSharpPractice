@@ -18,7 +18,6 @@ D:/Projects/Rider_Projects/CSharpPractice/CSharpPractice/obj/Debug/net6.0/ref/CS
 /Users/yejinshengge/Project/Rider_Project/CSharpPractice/CSharpPractice/bin/Debug/net6.0/CSharpPractice.runtimeconfig.json
 /Users/yejinshengge/Project/Rider_Project/CSharpPractice/CSharpPractice/bin/Debug/net6.0/CSharpPractice.dll
 /Users/yejinshengge/Project/Rider_Project/CSharpPractice/CSharpPractice/bin/Debug/net6.0/CSharpPractice.pdb
-/Users/yejinshengge/Project/Rider_Project/CSharpPractice/CSharpPractice/obj/Debug/net6.0/CSharpPractice.csproj.AssemblyReference.cache
 /Users/yejinshengge/Project/Rider_Project/CSharpPractice/CSharpPractice/obj/Debug/net6.0/CSharpPractice.GeneratedMSBuildEditorConfig.editorconfig
 /Users/yejinshengge/Project/Rider_Project/CSharpPractice/CSharpPractice/obj/Debug/net6.0/CSharpPractice.AssemblyInfoInputs.cache
 /Users/yejinshengge/Project/Rider_Project/CSharpPractice/CSharpPractice/obj/Debug/net6.0/CSharpPractice.AssemblyInfo.cs
