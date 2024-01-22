@@ -237,6 +237,41 @@ public static class Tools
         return res.ToArray();
     }
 
+    public static IList<IList<int>> ConstructTList(string str)
+    {
+        IList<IList<int>> res = new List<IList<int>>();
+        str = str.Substring(1, str.Length - 2);
+        int index = 0;
+        int startIndex = 0;
+        int endIndex = 0;
+        while (index < str.Length)
+        {
+            if (str[index] == '[')
+            {
+                startIndex = index + 1;
+            }
+            else if (str[index] == ']')
+            {
+                endIndex = index - 1;
+                if (endIndex - startIndex >= 0)
+                {
+                    var arrStr = str.Substring(startIndex, endIndex - startIndex + 1);
+                    var arr = arrStr.Split(",");
+                    var list = new List<int>();
+                    for (int i = 0; i < arr.Length; i++)
+                    {
+                        list.Add(int.Parse(arr[i]));
+                    }
+                    res.Add(list);
+                }
+            }
+
+            index++;
+        }
+        
+        return res;
+    }
+
     public static char[][] ConstructCharArray(string str)
     {
         List<char[]> res = new List<char[]>();
