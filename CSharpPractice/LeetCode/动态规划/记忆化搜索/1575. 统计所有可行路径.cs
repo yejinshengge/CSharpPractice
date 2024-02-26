@@ -16,14 +16,54 @@ public class LeetCode_1575
     public static void Test()
     {
         LeetCode_1575 obj = new LeetCode_1575();
-        // Console.WriteLine(obj.CountRoutes(new []{2,3,6,8,4},1,3,5));
-        // Console.WriteLine(obj.CountRoutes(new []{4,3,1},1,0,6));
-        // Console.WriteLine(obj.CountRoutes(new []{5,2,1},0,2,3));
-        Console.WriteLine(obj.CountRoutes(new []{1,2,3},0,2,40));
+        Console.WriteLine(obj.CountRoutes(new []{2,3,6,8,4},1,3,5) == obj.CountRoutes1(new []{2,3,6,8,4},1,3,5));
+        Console.WriteLine(obj.CountRoutes(new []{4,3,1},1,0,6) == obj.CountRoutes1(new []{4,3,1},1,0,6));
+        Console.WriteLine(obj.CountRoutes(new []{5,2,1},0,2,3) == obj.CountRoutes1(new []{5,2,1},0,2,3));
+        Console.WriteLine(obj.CountRoutes(new []{1,2,3},0,2,40) == obj.CountRoutes1(new []{1,2,3},0,2,40));
     }
 
     private const int MOD = 1000000007;
+
+    #region 动态规划
+
     public int CountRoutes(int[] locations, int start, int finish, int fuel)
+    {
+        int[,] dp = new int[locations.Length,fuel+1];
+
+        // 本身就在终点，路径为1
+        for (int restFuel = 0; restFuel <= fuel; restFuel++)
+        {
+            dp[finish, restFuel] = 1;
+        }
+        // fuel 和 fuel-need 具有严格大小关系：fuel >= fuel-need
+        // 所以先从小到大枚举fuel
+        for (int restFuel = 0; restFuel <= fuel; restFuel++)
+        {
+            // 枚举起始点
+            for (int startP = 0; startP < locations.Length; startP++)
+            {
+                // 枚举下一点
+                for (int nextP = 0; nextP < locations.Length; nextP++)
+                {
+                    if(startP == nextP) continue;
+                    int need = Math.Abs(locations[startP] - locations[nextP]);
+                    if (restFuel >= need)
+                    {
+                        dp[startP, restFuel] += dp[nextP, restFuel - need];
+                        dp[startP, restFuel] %= MOD;
+                    }
+                    
+                }
+            }
+        }
+
+        return dp[start, fuel];
+    }
+
+    #endregion
+    
+    #region 记忆化搜索
+    public int CountRoutes1(int[] locations, int start, int finish, int fuel)
     {
         int[,] map = new int[locations.Length, fuel + 1];
         for (int i = 0; i < locations.Length; i++)
@@ -41,15 +81,16 @@ public class LeetCode_1575
     {
         if (map[start, fuel] != -1)
             return map[start, fuel];
-        
+        // 燃料不足,无法到达
         var restFuel = fuel - Math.Abs(locations[start] - locations[finish]);
         if (restFuel < 0)
         {
             map[start, fuel] = 0;
             return 0;
         }
-
+        // 起点等于终点，本身就算一条路径
         int total = start == finish ?1:0;
+        // 枚举能到达的所有点
         for (int i = 0; i < locations.Length; i++)
         {
             if(i == start) continue;
@@ -64,4 +105,8 @@ public class LeetCode_1575
         map[start, fuel] = total;
         return total;
     }
+
+    
+
+    #endregion
 }
