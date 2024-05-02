@@ -68,44 +68,33 @@ public class LeetCode_0034
     // 思路二:用两次二分法
     public int[] SearchRange2(int[] nums, int target)
     {
-        int left = Dichotomy(nums, target, true);
-        int right = Dichotomy(nums, target, false);
-        if (right < left || right == -1 || left == -1) return new[] { -1, -1 };
-        
-        return new[] { left, right };
-    }
-
-    private int Dichotomy(int[] nums,int target,bool isLeft)
-    {
-        int left = 0, right = nums.Length - 1;
-        int last = -1;
-        while (left <= right)
+        int[] res = {-1,-1};
+        if (nums.Length == 0) return res;
+        int left = 0, right = nums.Length-1;
+        while (left < right)
         {
-            int mid = (right - left) / 2 + left;
-            // 寻找左边界
-            if (isLeft)
-            {
-                if (nums[mid] >= target)
-                {
-                    right = mid - 1;
-                    last = mid;
-                }
-                else
-                    left = mid + 1;
-            }
-            // 寻找右边界
+            int mid = left + right >> 1;
+            if (nums[mid] >= target)
+                right = mid;
             else
-            {
-                if (nums[mid] <= target)
-                {
-                    left = mid + 1;
-                    last = mid;
-                }
-                else
-                    right = mid - 1;
-            }
+                left = mid + 1;
         }
 
-        return last;
+        if (nums[left] != target) return res;
+        res[0] = left;
+        right = nums.Length-1;
+        while (left < right)
+        {
+            int mid = (left + right + 1) >> 1;
+            if (nums[mid] <= target)
+                left = mid;
+            else
+                right = mid - 1;
+        }
+
+        res[1] = right;
+        return res;
     }
+
+
 }
