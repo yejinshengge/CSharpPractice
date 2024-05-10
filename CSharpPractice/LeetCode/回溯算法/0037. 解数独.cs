@@ -1,3 +1,5 @@
+using CSharpPractice.Util;
+
 namespace CSharpPractice.LeetCode.回溯算法;
 
 /**
@@ -27,63 +29,105 @@ public class LeetCode_0037
             new[] { '.', '.', '.', '.', '8', '.', '.', '7', '9' },
         };
         obj.SolveSudoku(board);
-        for (int i = 0; i < 9; i++)
-        {
-            for (int j = 0; j < 9; j++)
-            {
-                Console.Write(board[i][j]+" ");
-            }
-            Console.WriteLine();
-        }
-    }
-    
-    public void SolveSudoku(char[][] board) {
-        DoSolveSudoku(board);
+        Tools.PrintArr(board);
     }
 
-    private bool DoSolveSudoku(char[][] board)
-    {
-        for (int i = 0; i < 9; i++)
+    #region
+        public void SolveSudoku1(char[][] board) {
+            DoSolveSudoku(board);
+        }
+
+        private bool DoSolveSudoku(char[][] board)
         {
-            for (int j = 0; j < 9; j++)
+            for (int i = 0; i < 9; i++)
             {
-                if(board[i][j] != '.') continue;
-                for (char k = '1'; k <= '9'; k++)
+                for (int j = 0; j < 9; j++)
                 {
-                    if (IsValid(board, i, j,k))
+                    if(board[i][j] != '.') continue;
+                    for (char k = '1'; k <= '9'; k++)
                     {
-                        board[i][j] = k;
-                        if(DoSolveSudoku(board)) return true;
-                        board[i][j] = '.';
+                        if (IsValid(board, i, j,k))
+                        {
+                            board[i][j] = k;
+                            if(DoSolveSudoku(board)) return true;
+                            board[i][j] = '.';
+                        }
                     }
+                    return false;
                 }
-                return false;
+            }
+
+            return true;
+        }
+
+        private bool IsValid(char[][] board, int row, int col,char val)
+        {
+            // 检查行
+            for (int i = 0; i < 9; i++)
+            {
+                if (i != col && board[row][i] == val) return false;
+            }
+            // 检查列
+            for (int i = 0; i < 9; i++)
+            {
+                if (i != row && board[i][col] == val) return false;
+            }
+            // 检查九宫格
+            int startRow = row / 3 * 3;
+            int startCol = col / 3 * 3;
+            for (int i = startRow; i < startRow+3; i++)
+            {
+                for (int j = startCol; j < startCol+3; j++)
+                {
+                    if ((i != row || j !=col) && board[i][j] == val) return false;
+                }
+            }
+
+            return true;
+        }
+    #endregion
+    
+    public void SolveSudoku(char[][] board)
+    {
+        _doSolveSudoku(board, 0, 0);
+    }
+
+    private bool _doSolveSudoku(char[][] board, int x, int y)
+    {
+        if (x == board.Length) return true;
+        if (y == board.Length) return _doSolveSudoku(board,x+1,0);
+        if (board[x][y] != '.') return _doSolveSudoku(board,x,y+1);
+        for (char i = '1'; i <= '9'; i++)
+        {
+            if (_check(board, x, y, i))
+            {
+                board[x][y] = i;
+                if (_doSolveSudoku(board, x, y + 1)) return true;
+                board[x][y] = '.';
             }
         }
 
-        return true;
+        return false;
     }
 
-    private bool IsValid(char[][] board, int row, int col,char val)
+    private bool _check(char[][] board, int x, int y, char val)
     {
-        // 检查行
-        for (int i = 0; i < 9; i++)
+        // 检查同行
+        for (int i = 0; i < board.Length; i++)
         {
-            if (i != col && board[row][i] == val) return false;
+            if (board[x][i] == val) return false;
         }
-        // 检查列
-        for (int i = 0; i < 9; i++)
+        // 检查同列
+        for (int i = 0; i < board.Length; i++)
         {
-            if (i != row && board[i][col] == val) return false;
+            if (board[i][y] == val) return false;
         }
-        // 检查九宫格
-        int startRow = row / 3 * 3;
-        int startCol = col / 3 * 3;
-        for (int i = startRow; i < startRow+3; i++)
+        // 检查块
+        for (int i = x/3*3; i < (x/3+1)*3; i++)
         {
-            for (int j = startCol; j < startCol+3; j++)
+            for (int j = y/3*3; j < (y/3+1)*3; j++)
             {
-                if ((i != row || j !=col) && board[i][j] == val) return false;
+                if (board[i][j] == val) return false;
             }
         }
 
