@@ -8,13 +8,16 @@ namespace CSharpPractice.LeetCode.回溯算法;
  */
 public class LeetCode_0090
 {
+
     public static void Test()
     {
         LeetCode_0090 obj = new LeetCode_0090();
-        var list = obj.SubsetsWithDup(new[] {0 });
-        Tools.PrintEnumerator(list);
+        Tools.PrintEnumerator(obj.SubsetsWithDup(new[] {1,2,2}));
+        Tools.PrintEnumerator(obj.SubsetsWithDup(new[] {0 }));
     }
 
+    #region 1st
+    #if false
     public IList<IList<int>> SubsetsWithDup(int[] nums) {
         _res.Clear();
         _path.Clear();
@@ -51,4 +54,47 @@ public class LeetCode_0090
             }
         }
     }
+    #endif
+    
+    #endregion
+
+    #region 2st
+
+    #if true
+    public IList<IList<int>> SubsetsWithDup(int[] nums)
+    {
+        _valid = new bool[nums.Length];
+        _res.Clear();
+        _path.Clear();
+        Array.Sort(nums);
+        _doSubsetsWithDup(nums, 0);
+        return _res;
+    }
+
+    private bool[] _valid;
+    private IList<IList<int>> _res = new List<IList<int>>();
+    private IList<int> _path = new List<int>();
+    private void _doSubsetsWithDup(int[] nums, int index)
+    {
+        _res.Add(new List<int>(_path));
+            
+        for (int i = index; i < nums.Length; i++)
+        {
+            if(i > 0 && nums[i-1] == nums[i] && _valid[i-1] == false)
+                continue;
+
+            _path.Add(nums[i]);
+            _valid[i] = true;
+            
+            _doSubsetsWithDup(nums,i+1);
+
+            _valid[i] = false;
+            _path.RemoveAt(_path.Count-1);
+            
+        }
+    }
+    
+    #endif
+
+    #endregion
 }
