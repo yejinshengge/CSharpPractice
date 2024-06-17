@@ -15,7 +15,7 @@ public class LeetCode_05_03
     }
     
     // 双指针
-    public int ReverseBits(int num)
+    public int ReverseBits1(int num)
     {
         int left = 0, right = 0, index = -1,len = 0;
         for (int i = 0; i < 32; i++)
@@ -41,5 +41,55 @@ public class LeetCode_05_03
         len = Math.Max(len, left - right );
         return len;
     }
+
+    // 动态规划
+    public int ReverseBits2(int num)
+    {
+        int[] curArr = new int[33];
+        int[] reverseArr = new int[33];
+
+        int max = 0;
+        for (int i = 1; i <= 32; i++)
+        {
+            int cur = num & (1 << i-1);
+            if (cur != 0)
+            {
+                curArr[i] = curArr[i - 1] + 1;
+                reverseArr[i] = reverseArr[i - 1] + 1;
+            }
+            else
+            {
+                curArr[i] = 0;
+                reverseArr[i] = curArr[i - 1] + 1;
+            }
+
+            max = Math.Max(reverseArr[i],max);
+        }
+        
+        return max;
+    }
     
+    // 动态规划优化
+    public int ReverseBits(int num)
+    {
+        int cur = 0, reverse = 0, max = 0;
+        for (int i = 1; i <= 32; i++)
+        {
+            int curBit = num & (1 << i-1);
+            if (curBit != 0)
+            {
+                reverse++;
+                cur++;
+            }
+            else
+            {
+                reverse = cur+1;
+                cur = 0;
+            }
+
+            max = Math.Max(max, reverse);
+        }
+
+        return max;
+    }
 }
