@@ -7,6 +7,7 @@ public class LeetCode_10_03
         LeetCode_10_03 obj = new LeetCode_10_03();
         Console.WriteLine(obj.Search(new []{15, 16, 19, 20, 25, 1, 3, 4, 5, 7, 10, 14},5));
         Console.WriteLine(obj.Search(new []{15, 16, 19, 20, 25, 1, 3, 4, 5, 7, 10, 14},11));
+        Console.WriteLine(obj.Search(new []{1, -2},-2));
     }
     
     public int Search(int[] arr, int target)
