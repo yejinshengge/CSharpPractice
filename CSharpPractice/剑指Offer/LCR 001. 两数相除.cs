@@ -10,7 +10,7 @@ public class LeetCode_LCR001
         // Console.WriteLine(obj.Divide(0,1));
         // Console.WriteLine(obj.Divide(1,1));
         // Console.WriteLine(obj.Divide(int.MinValue,-1));
-        Console.WriteLine(obj.Divide1(-2147483648,1));
+        Console.WriteLine(obj.Divide(-2147483648,1));
     }
     
     public int Divide1(int a, int b)
@@ -41,7 +41,7 @@ public class LeetCode_LCR001
         return flag?-res:res;
     }
     
-    public int Divide(int a, int b)
+    public int Divide2(int a, int b)
     {
         if (b == 1) return a;
         if (a == int.MinValue && b == -1)
@@ -74,5 +74,42 @@ public class LeetCode_LCR001
 
         // 考虑结果的正负
         return isNegative ? result : -result;
+    }
+
+
+    public int Divide(int a, int b)
+    {
+        // 处理溢出
+        if (a == int.MinValue && b == -1)
+            return int.MaxValue;
+        if (b == 1) return a;
+        // 统一转为负数处理
+        bool flag = (a < 0 && b > 0) || (a > 0 && b < 0);
+        int dividend = a < 0 ? a : -a;
+        int divisor = b < 0 ? b : -b;
+        
+        // 找到最大除数
+        int quotient = 1;
+        // 注意quotient溢出
+        while (divisor >= int.MinValue>> 1 && dividend <= divisor<<1)
+        {
+            divisor <<= 1;
+            quotient <<= 1;
+        }
+
+        int res = 0;
+        while (quotient >0 && dividend <= 0)
+        {
+            if (dividend <= divisor)
+            {
+                dividend -= divisor;
+                res += quotient;
+            }
+
+            divisor >>= 1;
+            quotient >>= 1;
+        }
+
+        return flag?-res:res;
     }
 }
