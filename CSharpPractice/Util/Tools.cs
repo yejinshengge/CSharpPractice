@@ -62,9 +62,23 @@ public static class Tools
         Console.WriteLine();
         for (int i = 0; i < arr.Length; i++)
         {
-            for (int j = 0; j < arr[0].Length; j++)
+            for (int j = 0; j < arr[i].Length; j++)
             {
                 Console.Write(arr[i][j]+" ");
+            }
+            Console.WriteLine();
+        }
+        Console.WriteLine();
+    }
+    
+    public static void PrintArr<T>(T[,] arr)
+    {
+        Console.WriteLine();
+        for (int i = 0; i < arr.GetLength(0); i++)
+        {
+            for (int j = 0; j < arr.GetLength(1); j++)
+            {
+                Console.Write(arr[i,j]+" ");
             }
             Console.WriteLine();
         }
