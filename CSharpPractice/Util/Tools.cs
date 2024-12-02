@@ -243,6 +243,8 @@ public static class Tools
                         res[^1][i]=int.Parse(arr[i]);
                     }
                 }
+                else
+                    res.Add(Array.Empty<int>());
             }
 
             index++;
