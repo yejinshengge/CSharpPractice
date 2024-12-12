@@ -121,6 +121,7 @@ public static class Tools
     /// <returns></returns>
     public static TreeNode ConstructTree(string str)
     {
+        if (string.IsNullOrEmpty(str)) return null;
         var values = str.Split(",");
         Queue<TreeNode> queue = new Queue<TreeNode>();
 
