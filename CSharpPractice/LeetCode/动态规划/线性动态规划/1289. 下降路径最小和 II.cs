@@ -19,80 +19,87 @@ public class LeetCode_1289
     
     public int MinFallingPathSum(int[][] grid)
     {
-        if (grid.Length == 1) return grid[0][0];
-        int[,] dp = new int[grid.Length, grid.Length];
-        int res = int.MaxValue;
-        for (int i = 0; i < grid.Length; i++)
+        var n = grid.Length;
+        // 设dp[i][j]表示第i行选择j时，前i行的最短非零偏移下降路径和
+        int[][] dp = new int[n][];
+        // 初始化第一行
+        for (int i = 0; i < n; i++)
         {
-            for (int j = 0; j < grid[i].Length; j++)
-            {
-                if (i == 0)
-                {
-                    dp[i, j] = grid[i][j];
-                }
-                else
-                {
-                    int minLen = int.MaxValue;
-                    for (int k = 0; k < grid[i-1].Length; k++)
-                    {
-                        if(k == j)
-                            continue;
-                        if (dp[i - 1, k] < minLen)
-                            minLen = dp[i - 1, k];
-                    }
+            dp[i] = new int[n];
+            dp[0][i] = grid[0][i];
+        }
 
-                    dp[i, j] = minLen + grid[i][j];
-                    if (i == grid.Length - 1)
-                        res = Math.Min(res, dp[i, j]);
+        for (int i = 1; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                dp[i][j] = int.MaxValue;
+                // 选择i-1行每一列的情况
+                for (int k = 0; k < n; k++)
+                {
+                    if(k == j)
+                        continue;
+                    dp[i][j] = Math.Min(dp[i][j], dp[i - 1][k] + grid[i][j]);
                 }
             }
         }
+        // 找出最后一行最小值
+        int min = int.MaxValue;
+        for (int i = 0; i < n; i++)
+        {
+            min = Math.Min(dp[n - 1][i], min);
+        }
 
-        return res;
+        return min;
     }
 
     public int MinFallingPathSum2(int[][] grid)
     {
-        if (grid.Length == 1) return grid[0][0];
-        int[,] dp = new int[grid.Length, grid.Length];
-        int res = int.MaxValue;
-
-        for (int i = 0; i < grid.Length; i++)
+        var n = grid.Length;
+        // 设dp[i][j]表示第i行选择j时，前i行的最短非零偏移下降路径和
+        int[][] dp = new int[n][];
+        // 初始化第一行
+        for (int i = 0; i < n; i++)
         {
-            dp[0, i] = grid[0][i];
+            dp[i] = new int[n];
+            dp[0][i] = grid[0][i];
         }
-        for (int i = 1; i < grid.Length; i++)
+        
+        for (int i = 1; i < n; i++)
         {
-            int minIndex = -1,minLen = int.MaxValue;
-            int preMinLen = int.MaxValue;
-            for (int k = 0; k < grid[i].Length; k++)
+            // 找出上一行最小、次小的元素缓存下来
+            int minIndex = -1, minLen = int.MaxValue;
+            int secondLen = int.MaxValue;
+            for (int j = 0; j < n; j++)
             {
-                if (dp[i - 1, k] < minLen)
+                if (dp[i - 1][j] < minLen)
                 {
-                    preMinLen = minLen;
+                    secondLen = minLen;
+                    minIndex = j;
+                    minLen = dp[i - 1][j];
                     
-                    minIndex = k;
-                    minLen = dp[i - 1, k];
                 }
-                else if (dp[i - 1, k] < preMinLen)
+                else if (dp[i - 1][j] < secondLen)
                 {
-                    preMinLen = dp[i - 1, k];
+                    secondLen = dp[i - 1][j];
                 }
-               
             }
-            
-            for (int j = 0; j < grid[i].Length; j++)
+
+            for (int j = 0; j < n; j++)
             {
-                if(j == minIndex)
-                    dp[i, j] = preMinLen+ grid[i][j];
+                // 当前列与前一行最小列重合，选择次小列
+                if (j == minIndex)
+                    dp[i][j] = secondLen + grid[i][j];
                 else
-                    dp[i, j] = minLen + grid[i][j];
-                if (i == grid.Length - 1)
-                    res = Math.Min(res, dp[i, j]);
-                
+                    dp[i][j] = minLen + grid[i][j];
             }
         }
-
-        return res;
+        // 找出最后一行最小值
+        int min = int.MaxValue;
+        for (int i = 0; i < n; i++)
+        {
+            min = Math.Min(dp[n - 1][i], min);
+        }
+        return min;
     }
 }
