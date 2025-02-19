@@ -11,21 +11,21 @@ public class LeetCode_LCR070
     
     public int SingleNonDuplicate(int[] nums)
     {
-        int left = 0, right = nums.Length / 2;
-        while (left<=right)
+        int left = 0, right = nums.Length - 1;
+        // <= 适用于查找区间/边界
+        // <> 适用于查找具体值
+        while (left < right)
         {
             int mid = (left + right) >> 1;
-            int index = mid * 2;
-            if (index < nums.Length - 1 && nums[index] != nums[index + 1])
-            {
-                if (mid == 0 || nums[index - 2] == nums[index - 1])
-                    return nums[index];
-                right = mid - 1;
-            }
+            // 当前下标为奇数,向前挪一位变成偶数
+            if (mid % 2 == 1) mid--;
+            // 当前位和后一位能凑一对,说明规律没被打破
+            if (nums[mid] == nums[mid + 1])
+                left = mid + 2;
             else
-                left = mid + 1;
+                right = mid;
         }
 
-        return nums[^1];
+        return nums[left];
     }
 }
