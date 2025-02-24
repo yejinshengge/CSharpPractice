@@ -57,12 +57,13 @@ public class LeetCode_LCR113
 
     public int[] FindOrder(int numCourses, int[][] prerequisites)
     {
+        // 建图
         Dictionary<int, List<int>> graph = new();
         for (int i = 0; i < numCourses; i++)
         {
             graph.Add(i,new List<int>());
         }
-
+        // 统计入度
         int[] inSight = new int[numCourses];
         foreach (var prerequisite in prerequisites)
         {
@@ -72,17 +73,17 @@ public class LeetCode_LCR113
             graph[from].Add(to);
             inSight[to]++;
         }
-
+        // 找到入度为0的节点
         Queue<int> queue = new();
         for (int i = 0; i < numCourses; i++)
         {
             if(inSight[i] == 0)
                 queue.Enqueue(i);
         }
-
         List<int> res = new List<int>();
         while (queue.Count > 0)
         {
+            // 删除入度为0的节点,继续寻找其他入度为0的节点
             var node = queue.Dequeue();
             res.Add(node);
             foreach (var next in graph[node])

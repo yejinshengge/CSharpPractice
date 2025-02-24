@@ -13,17 +13,19 @@ public class LeetCode_LCR116
     
     public int FindCircleNum(int[][] isConnected)
     {
+        // 所有元素初始化为独立集合
         int[] fathers = new int[isConnected.Length];
         for (int i = 0; i < isConnected.Length; i++)
         {
             fathers[i] = i;
         }
-
+        
         int count = isConnected.Length;
         for (var i = 0; i < isConnected.Length; i++)
         {
             for (var j = i+1; j < isConnected[i].Length; j++)
             {
+                // 两个城市直接连接就合并两个集合
                 if (isConnected[i][j] == 1 && _union(fathers, i, j))
                     count--;
             }
