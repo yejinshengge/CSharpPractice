@@ -13,11 +13,14 @@ public class LeetCode_LCR076
     {
         int target = nums.Length - k;
         int start = 0, end = nums.Length - 1;
+        // 整体进行一次划分
         int index = _partition(nums, start, end);
         while (target!= index)
         {
+            // 划多了，在左侧继续划分
             if (target < index)
                 end = index-1;
+            // 划少了，在右侧继续划分
             else if (target > index)
                 start = index+1;
             index =  _partition(nums, start, end);
@@ -27,28 +30,33 @@ public class LeetCode_LCR076
 
     private int _partition(int[] nums, int left, int right)
     {
+        int cur = left;
         int smallP = left - 1;
         int bigP = right;
-        int random = new Random().Next(left, right);
+        // 随机取划分值,放在最右边
+        int random = new Random().Next(cur, right);
         (nums[right], nums[random]) = (nums[random], nums[right]);
 
-        while (left < bigP)
+        while (cur < bigP)
         {
-            if (nums[left] > nums[right])
+            // 当前元素大于划分值，与大于区前一个元素交换，大于区左移
+            if (nums[cur] > nums[right])
             {
-                (nums[left], nums[bigP - 1]) = (nums[bigP - 1], nums[left]);
+                (nums[cur], nums[bigP - 1]) = (nums[bigP - 1], nums[cur]);
                 bigP--;
             }
-            else if (nums[left] < nums[right])
+            // 当前元素小于划分值，与小于区后一个元素交换，小于区右移，当前指针后移
+            else if (nums[cur] < nums[right])
             {
-                (nums[left], nums[smallP + 1]) = (nums[smallP + 1], nums[left]);
+                (nums[cur], nums[smallP + 1]) = (nums[smallP + 1], nums[cur]);
                 smallP++;
-                left++;
+                cur++;
             }
+            // 当前元素等于划分值，当前指针后移
             else
-                left++;
+                cur++;
         }
-
+        // 划分值与大于区第一个元素交换
         (nums[bigP], nums[right]) = (nums[right], nums[bigP]);
 
         return smallP + 1;

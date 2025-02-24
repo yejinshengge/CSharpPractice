@@ -12,12 +12,13 @@ public class LeetCode_LCR075
     
     public int[] RelativeSortArray(int[] arr1, int[] arr2)
     {
+        // 字典计数
         int[] dic = new int[1001];
         foreach (var num in arr1)
         {
             dic[num]++;
         }
-
+        // 按arr2顺序找出arr1的元素个数并依次加入结果集
         int[] res = new int[arr1.Length];
         int index = 0;
         foreach (var num in arr2)
@@ -28,7 +29,7 @@ public class LeetCode_LCR075
                 dic[num]--;
             }
         }
-        
+        // 遍历剩余元素
         for (var i = 0; i < dic.Length; i++)
         {
             while (dic[i] > 0)
