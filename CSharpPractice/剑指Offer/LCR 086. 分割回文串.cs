@@ -14,6 +14,7 @@ public class LeetCode_LCR086
     {
         _path.Clear();
         _res.Clear();
+        // 利用动态规划求出[i,j]是否为回文串
         bool[,] dp = new bool[s.Length, s.Length];
         for (int i = 0; i < dp.GetLength(0); i++)
         {
@@ -29,6 +30,7 @@ public class LeetCode_LCR086
                 dp[i, j] = s[i] == s[j] && dp[i + 1, j - 1];
             }
         }
+        // 回溯法求出所有分割方案
         _doPartition(dp,s,0);
         string[][] res = new string[_res.Count][];
         for (var i = 0; i < _res.Count; i++)

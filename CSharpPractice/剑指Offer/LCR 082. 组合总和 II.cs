@@ -36,7 +36,9 @@ public class LeetCode_LCR082
         for (int i = index; i < candidates.Length; i++)
         {
             var a = sum + candidates[i];
+            //  已经超过target，后面不需要再看
             if(a > target) break;
+            // 连续相同的数字，第一个未选中，后面一定会出现重复，所以全都排除
             if(i > 0 && candidates[i] == candidates[i-1] && !visited[i-1])
                 continue;
             _path.Add(candidates[i]);

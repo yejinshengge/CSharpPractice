@@ -27,14 +27,14 @@ public class LeetCode_LCR085
             _res.Add(_builder.ToString());
             return;
         }
-
+        // 左括号有剩余，尝试添加左括号
         if (left > 0)
         {
             _builder.Append("(");
             _doGenerateParenthesis(left-1,right);
             _builder.Remove(_builder.Length - 1, 1);
         }
-
+        // 已添加的左括号比右括号多，尝试添加右括号
         if (left < right)
         {
             _builder.Append(")");

@@ -13,6 +13,7 @@ public class LeetCode_LCR093
     
     public int LenLongestFibSubseq(int[] arr)
     {
+        // 利用字典存储元素值和索引
         Dictionary<int, int> dic = new();
         for (var i = 0; i < arr.Length; i++)
         {
@@ -24,7 +25,9 @@ public class LeetCode_LCR093
         {
             for (int j = 0; j < i; j++)
             {
+                // 找到满足arr[i] = arr[k] + arr[j] 的k
                 int index = dic.GetValueOrDefault(arr[i] - arr[j], -1);
+                // 如果存在，在已有的长度基础上+1，否则只有这两个元素组成子序列
                 dp[i, j] = index >= 0 && index < j ? dp[j, index] + 1 : 2;
                 maxLen = Math.Max(maxLen, dp[i, j]);
             }

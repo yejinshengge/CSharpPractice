@@ -16,9 +16,11 @@ public class LeetCode_LCR077
     {
         if (head == null || head.next == null) return head;
         var list1 = head;
+        // 拆分成两个链表
         var list2 = _split(head);
         list1 = SortList(list1);
         list2 = SortList(list2);
+        // 合并两段链表
         return _merge(list1, list2);
     }
 
@@ -26,6 +28,7 @@ public class LeetCode_LCR077
     {
         if (head == null || head.next == null)
             return head;
+        // 快慢指针寻找中间节点
         ListNode slow = head, fast = head.next;
         while (fast is { next: not null })
         {
