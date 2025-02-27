@@ -16,6 +16,7 @@ public class LeetCode_LCR101
     
     public bool CanPartition2(int[] nums)
     {
+        // 求出总和的一半作为目标值
         int sum = 0;
         for (var i = 0; i < nums.Length; i++)
         {
@@ -24,7 +25,9 @@ public class LeetCode_LCR101
 
         if (sum % 2 != 0) return false;
         sum = sum / 2;
+        // dp[i,j]表示前i个元素是否能组成和为j的子集
         bool[,] dp = new bool[nums.Length+1,sum+1];
+        // 初始化dp[i,0]，因为dp[i,0]表示前i个元素是否能组成和为0的子集，显然是可以的
         for (int i = 0; i <= nums.Length; i++)
         {
             dp[i,0] = true;
@@ -33,7 +36,9 @@ public class LeetCode_LCR101
         {
             for (int j = 1; j <= sum; j++)
             {
+                // 不选当前元素
                 dp[i, j] = dp[i - 1, j];
+                // 选当前元素
                 if (j >= nums[i - 1])
                     dp[i, j] |= dp[i - 1, j - nums[i - 1]];
             }

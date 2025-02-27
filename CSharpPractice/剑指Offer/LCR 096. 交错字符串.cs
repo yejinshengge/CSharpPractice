@@ -16,8 +16,11 @@ public class LeetCode_LCR096
     public bool IsInterleave(string s1, string s2, string s3)
     {
         if (s1.Length + s2.Length != s3.Length) return false;
+        // dp[i,j]表示s1[0,i]和s2[0,j]是否能交错组成s3[0,i+j]
         bool[,] dp = new bool[s1.Length + 1, s2.Length + 1];
+        // 两个空串可以交错组成空串
         dp[0, 0] = true;
+        // 初始化dp[i, 0]和dp[0,i]，因为转移过程要用到
         for (int i = 1; i <= s1.Length; i++)
         {
             dp[i, 0] = s1[i - 1] == s3[i - 1] && dp[i - 1, 0];

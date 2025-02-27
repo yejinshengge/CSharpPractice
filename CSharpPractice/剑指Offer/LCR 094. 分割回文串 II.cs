@@ -13,6 +13,7 @@ public class LeetCode_LCR094
     
     public int MinCut(string s)
     {
+        // 动态规划提前计算[i,j]是否为回文串
         bool[,] isPal = new bool[s.Length, s.Length];
         for (var i = 0; i < s.Length; i++)
         {
@@ -23,14 +24,18 @@ public class LeetCode_LCR094
             }
         }
 
+        
         int[] dp = new int[s.Length];
         for (int i = 0; i < s.Length; i++)
         {
+            // 如果[0,i]是回文串，则不需要分割
             if (isPal[0, i])
                 dp[i] = 0;
             else
             {
+                // 最多分割i次
                 dp[i] = i;
+                // 遍历[1,i]，找到最小的分割次数
                 for (int j = 1; j <= i; j++)
                 {
                     if (isPal[j, i])
