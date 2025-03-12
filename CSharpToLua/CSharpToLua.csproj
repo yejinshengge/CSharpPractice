@@ -9,6 +9,7 @@
 
     <ItemGroup>
       <Folder Include="LuaSource\bin\" />
+      <Folder Include="VirtualMachine\" />
     </ItemGroup>
 
 </Project>
