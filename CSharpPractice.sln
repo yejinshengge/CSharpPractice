@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpPractice", "CSharpPractice\CSharpPractice.csproj", "{BB8181A6-737E-46FD-8361-EDC8D5DE6886}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpToLua", "CSharpToLua\CSharpToLua.csproj", "{D4FDFEC9-EB76-4BAA-B266-79E3B475A166}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{BB8181A6-737E-46FD-8361-EDC8D5DE6886}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB8181A6-737E-46FD-8361-EDC8D5DE6886}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB8181A6-737E-46FD-8361-EDC8D5DE6886}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4FDFEC9-EB76-4BAA-B266-79E3B475A166}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4FDFEC9-EB76-4BAA-B266-79E3B475A166}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4FDFEC9-EB76-4BAA-B266-79E3B475A166}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4FDFEC9-EB76-4BAA-B266-79E3B475A166}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

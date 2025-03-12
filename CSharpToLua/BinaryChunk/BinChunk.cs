@@ -198,7 +198,7 @@ namespace BinChunk
         /// <summary>
         /// Lua字节码文件签名: "\x1bLua"
         /// </summary>
-        public const string LUA_SIGNATURE = "\x1bLua";
+        public static readonly byte[] LUA_SIGNATURE = [0x1B, 0x4C, 0x75, 0x61];
 
         /// <summary>
         /// Lua版本号：0x53 (对应Lua 5.3)
@@ -213,7 +213,7 @@ namespace BinChunk
         /// <summary>
         /// Lua字节码文件头部数据: "\x19\x93\r\n\x1a\n"
         /// </summary>
-        public const string LUAC_DATA = "\x19\x93\r\n\x1a\n";
+        public static readonly byte[] LUAC_DATA = [0x19, 0x93, 0x0D, 0x0A, 0x1A, 0x0A];
 
         /// <summary>
         /// C语言int类型大小（字节）

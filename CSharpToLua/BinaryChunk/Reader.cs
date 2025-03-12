@@ -132,7 +132,7 @@ public class Reader
     public void CheckHeader()
     {
         // 检查Lua签名
-        if (System.Text.Encoding.UTF8.GetString(ReadBytes(4)) != Constants.LUA_SIGNATURE)
+        if (!ReadBytes(4).SequenceEqual(Constants.LUA_SIGNATURE))
         {
             throw new FormatException("不是预编译的Lua字节码！");
         }
@@ -147,7 +147,7 @@ public class Reader
             throw new FormatException("格式不匹配！");
         }
         // 检查Lua数据标记
-        else if (System.Text.Encoding.UTF8.GetString(ReadBytes(6)) != Constants.LUAC_DATA)
+        else if (!ReadBytes(6).SequenceEqual(Constants.LUAC_DATA))
         {
             throw new FormatException("文件已损坏！");
         }
