@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using BinChunk;
+using VirtualMachine;
 
 namespace CSharpToLua;
 
@@ -11,10 +12,10 @@ public class Program
         string url = "D:\\CSharpPractice\\CSharpToLua\\LuaSource\\bin\\helloworld.out";
         // 读取文件内容
         byte[] data = File.ReadAllBytes(url);
-                    
+
         // 解析Lua字节码
         Prototype proto = BinaryChunkParser.Undump(data);
-                    
+
         // 列出函数原型信息
         List(proto);
     }
@@ -27,13 +28,13 @@ public class Program
     {
         // 打印函数头部信息
         Console.Write(PrintHeader(f));
-            
+
         // 打印指令表
         Console.Write(PrintCode(f));
-            
+
         // 打印详细信息（常量表、局部变量表、Upvalue表）
         Console.Write(PrintDetail(f));
-            
+
         // 递归打印子函数
         foreach (Prototype p in f.Protos)
         {
@@ -100,12 +101,89 @@ public class Program
             }
 
             // 格式化输出：序号、行号和十六进制指令
-            result.AppendFormat("\t{0}\t[{1}]\t0x{2:X8}\n", pc + 1, line, f.Code[pc]);
+            Instruction instruction = new Instruction(f.Code[pc]);
+            result.AppendFormat("\t{0}\t[{1}]\t{2:X8} ", pc + 1, line, instruction.OpName());
+            result.AppendFormat(PrintOperands(instruction));
+            result.Append("\n");
         }
 
         return result.ToString();
     }
-    
+
+    /// <summary>
+    /// 打印指令的操作数部分
+    /// </summary>
+    /// <param name="i">要打印的指令</param>
+    /// <returns>操作数的字符串表示</returns>
+    public static string PrintOperands(Instruction i)
+    {
+        var sb = new System.Text.StringBuilder();
+
+        switch (i.OpMode())
+        {
+            case InstructionMode.IABC:
+                var (a, b, c) = i.ABC();
+                sb.Append(a);
+
+                if (i.BMode() != OpArgType.OpArgN)
+                {
+                    if (b > 0xFF)
+                    {
+                        // 最高位是1就认为它表示常量表索引，按负数输出
+                        sb.Append($" {-1 - (b & 0xFF)}");
+                    }
+                    else
+                    {
+                        // 寄存器
+                        sb.Append($" {b}");
+                    }
+                }
+
+                if (i.CMode() != OpArgType.OpArgN)
+                {
+                    if (c > 0xFF)
+                    {
+                        // 常量 - 使用负索引表示
+                        sb.Append($" {-1 - (c & 0xFF)}");
+                    }
+                    else
+                    {
+                        // 寄存器
+                        sb.Append($" {c}");
+                    }
+                }
+                break;
+
+            case InstructionMode.IABx:
+                var (abx_a, bx) = i.ABx();
+                sb.Append(abx_a);
+
+                if (i.BMode() == OpArgType.OpArgK)
+                {
+                    // 常量索引
+                    sb.Append($" {-1 - bx}");
+                }
+                else if (i.BMode() == OpArgType.OpArgU)
+                {
+                    // 无符号值
+                    sb.Append($" {bx}");
+                }
+                break;
+
+            case InstructionMode.IAsBx:
+                var (asbx_a, sbx) = i.AsBx();
+                sb.Append($"{asbx_a} {sbx}");
+                break;
+
+            case InstructionMode.IAx:
+                int ax = i.Ax();
+                sb.Append($"{ax}");
+                break;
+        }
+
+        return sb.ToString();
+    }
+
     /// <summary>
     /// 打印函数原型的详细信息（常量表、局部变量表和Upvalue表）
     /// </summary>
@@ -142,7 +220,7 @@ public class Program
 
         return result.ToString();
     }
-    
+
     /// <summary>
     /// 将常量转换为字符串表示形式
     /// </summary>
@@ -180,7 +258,7 @@ public class Program
             return "?";
         }
     }
-    
+
     /// <summary>
     /// 获取Upvalue的名称
     /// </summary>
