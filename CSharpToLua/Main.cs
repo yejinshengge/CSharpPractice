@@ -9,15 +9,31 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        string url = "D:\\CSharpPractice\\CSharpToLua\\LuaSource\\bin\\helloworld.out";
-        // 读取文件内容
-        byte[] data = File.ReadAllBytes(url);
+        // string url = "D:\\CSharpPractice\\CSharpToLua\\LuaSource\\bin\\helloworld.out";
+        // // 读取文件内容
+        // byte[] data = File.ReadAllBytes(url);
 
-        // 解析Lua字节码
-        Prototype proto = BinaryChunkParser.Undump(data);
+        // // 解析Lua字节码
+        // Prototype proto = BinaryChunkParser.Undump(data);
 
-        // 列出函数原型信息
-        List(proto);
+        // // 列出函数原型信息
+        // List(proto);
+
+
+        
+        // 创建Lua状态机
+
+        var ls = CSharpToLua.State.LuaState.New();
+        // 执行一系列栈操作并打印栈内容
+        ls.PushBoolean(true);     PrintStack(ls);
+        ls.PushInteger(10);       PrintStack(ls);
+        ls.PushNil();             PrintStack(ls);
+        ls.PushString("hello");   PrintStack(ls);
+        ls.PushValue(-4);         PrintStack(ls);
+        ls.Replace(3);            PrintStack(ls);
+        ls.SetTop(6);             PrintStack(ls);
+        ls.Remove(-3);            PrintStack(ls);
+        ls.SetTop(-5);            PrintStack(ls);
     }
 
     /// <summary>
@@ -272,5 +288,34 @@ public class Program
             return f.UpvalueNames[idx];
         }
         return "-";
+    }
+
+    /// <summary>
+    /// 打印Lua状态机的栈内容
+    /// </summary>
+    /// <param name="ls">Lua状态机实例</param>
+    public static void PrintStack(CSharpToLua.API.ILuaState ls)
+    {
+        int top = ls.GetTop();
+        for (int i = 1; i <= top; i++)
+        {
+            var t = ls.Type(i);
+            switch (t)
+            {
+                case CSharpToLua.API.LuaType.LUA_TBOOLEAN:
+                    Console.Write($"[{ls.ToBoolean(i).ToString().ToLower()}]");
+                    break;
+                case CSharpToLua.API.LuaType.LUA_TNUMBER:
+                    Console.Write($"[{ls.ToNumber(i)}]");
+                    break;
+                case CSharpToLua.API.LuaType.LUA_TSTRING:
+                    Console.Write($"[\"{ls.ToString(i)}\"]");
+                    break;
+                default:
+                    Console.Write($"[{ls.TypeName(t)}]");
+                    break;
+            }
+        }
+        Console.WriteLine();
     }
 }
