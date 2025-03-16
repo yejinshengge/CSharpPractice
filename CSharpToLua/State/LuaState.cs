@@ -203,15 +203,7 @@ public class LuaState : ILuaState
     public (double, bool) ToNumberX(int idx)
     {
         var val = stack.Get(idx);
-        if (val is double d)
-        {
-            return (d, true);
-        }
-        else if (val is long l)
-        {
-            return (l, true);
-        }
-        return (0, false);
+        return LuaValue.ToFloat(val);
     }
 
     public long ToInteger(int idx)
@@ -223,11 +215,7 @@ public class LuaState : ILuaState
     public (long, bool) ToIntegerX(int idx)
     {
         var val = stack.Get(idx);
-        if (val is long i)
-        {
-            return (i, true);
-        }
-        return (0, false);
+        return LuaValue.ToInteger(val);
     }
 
     public (string, bool) ToStringX(int idx)

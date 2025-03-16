@@ -56,5 +56,59 @@ namespace CSharpToLua.State
             
             return true; // 其他所有值都视为true
         }
+
+        /// <summary>
+        /// 尝试将值转换为浮点数
+        /// </summary>
+        /// <param name="val">要转换的值</param>
+        /// <returns>转换结果和是否成功的标志</returns>
+        public static (double, bool) ToFloat(object val)
+        {
+            if (val is double d)
+                return (d, true);
+            else if (val is long l)
+                return (l, true);
+            else if (val is string s)
+                return Number.Parser.ParseFloat(s);
+            else
+                return (0, false);
+        }
+
+        /// <summary>
+        /// 尝试将值转换为整数
+        /// </summary>
+        /// <param name="val">要转换的值</param>
+        /// <returns>转换结果和是否成功的标志</returns>
+        public static (long, bool) ToInteger(object val)
+        {
+            if (val is long i)
+                return (i, true);
+            else if (val is double d)
+                return Number.LuaMath.FloatToInteger(d);
+            else if (val is string s)
+                return StringToInteger(s);
+            else
+                return (0, false);
+        }
+
+        /// <summary>
+        /// 尝试将字符串转换为整数
+        /// </summary>
+        /// <param name="s">要转换的字符串</param>
+        /// <returns>转换结果和是否成功的标志</returns>
+        private static (long, bool) StringToInteger(string s)
+        {
+            // 先尝试直接解析为整数
+            var (i, ok) = Number.Parser.ParseInteger(s);
+            if (ok)
+                return (i, true);
+            
+            // 如果失败，尝试解析为浮点数，再转换为整数
+            var (f, ok2) = Number.Parser.ParseFloat(s);
+            if (ok2)
+                return Number.LuaMath.FloatToInteger(f);
+            
+            return (0, false);
+        }
     }
 }
