@@ -17,6 +17,7 @@ public class LeetCode_LCR107
     {
         int[][] res = new int[mat.Length][];
         Queue<int[]> queue = new Queue<int[]>();
+        // 将所有0入队
         for (var i = 0; i < res.Length; i++)
         {
             res[i] = new int[mat[i].Length];
@@ -34,12 +35,14 @@ public class LeetCode_LCR107
         {
             var node = queue.Dequeue();
             int distance = res[node[0]][node[1]];
+            // 搜寻所有方向
             foreach (var dir in dirs)
             {
                 int row = node[0] + dir[0];
                 int col = node[1] + dir[1];
                 if (row >= 0 && row < mat.Length && col >= 0 && col < mat[0].Length)
                 {
+                    // 更新最短距离
                     if (res[row][col] > distance + 1)
                     {
                         res[row][col] = distance + 1;

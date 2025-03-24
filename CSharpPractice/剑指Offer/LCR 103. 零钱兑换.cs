@@ -14,7 +14,10 @@ public class LeetCode_LCR103
     
     public int CoinChange2(int[] coins, int amount)
     {
+        // 设dp[i][j]为前i种硬币凑成j的方法数
         int[,] dp = new int[coins.Length+1,amount+1];
+        // 一种硬币都不选，凑成任何金额都是0 即dp[0][j] = 0
+        // 其他初始化为最大值
         for (int i = 0; i <= coins.Length; i++)
         {
             for (int j = 1; j <= amount; j++)
@@ -29,6 +32,7 @@ public class LeetCode_LCR103
             {
                 // 不使用当前硬币
                 dp[i, j] = dp[i - 1, j];
+                // 使用当前硬币，之前可能也选过这种硬币
                 if (j >= coins[i - 1])
                     dp[i, j] = Math.Min(dp[i,j],dp[i, j - coins[i - 1]]+1);
             }
@@ -51,6 +55,7 @@ public class LeetCode_LCR103
         {
             for (int j = coins[i - 1]; j <= amount; j++)
             {
+                // 依赖的是同一行，不需要从后往前遍历
                 dp[j] = Math.Min(dp[j],dp[j - coins[i - 1]]+1);
             }
         }

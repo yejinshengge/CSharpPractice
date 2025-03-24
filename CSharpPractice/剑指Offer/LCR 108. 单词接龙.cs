@@ -12,6 +12,7 @@ public class LeetCode_LCR108
     
     public int LadderLength1(string beginWord, string endWord, IList<string> wordList)
     {
+        // 构建图
         Dictionary<string, List<string>> dic = new();
         for (var i = 0; i < wordList.Count; i++)
         {
@@ -27,6 +28,7 @@ public class LeetCode_LCR108
         }
 
         if (!dic.ContainsKey(endWord)) return 0;
+        // beginWord可能不存在于字典中
         if (!dic.ContainsKey(beginWord))
         {
             dic.Add(beginWord,new List<string>());
@@ -37,6 +39,7 @@ public class LeetCode_LCR108
             }
         }
 
+        // 广度优先搜索
         Queue<string> queue = new();
         HashSet<string> visited = new();
         int len = 0;
@@ -101,6 +104,7 @@ public class LeetCode_LCR108
             }
         }
 
+        // 双向广度优先搜索
         HashSet<string> beginSet = new();
         HashSet<string> endSet = new();
         HashSet<string> visited = new();
