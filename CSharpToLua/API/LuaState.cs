@@ -222,4 +222,31 @@ public interface ILuaState
     /// </summary>
     /// <param name="s">要压入的字符串</param>
     void PushString(string s);
+
+    /// <summary>
+    /// 执行算术或按位运算
+    /// </summary>
+    /// <param name="op">运算类型</param>
+    void Arith(ArithOp op);
+
+    /// <summary>
+    /// 比较栈中的两个值
+    /// </summary>
+    /// <param name="idx1">第一个值的索引</param>
+    /// <param name="idx2">第二个值的索引</param>
+    /// <param name="op">比较操作类型</param>
+    /// <returns>比较结果</returns>
+    bool Compare(int idx1, int idx2, CompareOp op);
+
+    /// <summary>
+    /// 获取指定值的长度并将结果压入栈顶
+    /// </summary>
+    /// <param name="idx">值的索引</param>
+    void Len(int idx);
+
+    /// <summary>
+    /// 拼接栈顶的n个值并将结果压入栈顶
+    /// </summary>
+    /// <param name="n">要拼接的值的数量</param>
+    void Concat(int n);
 }

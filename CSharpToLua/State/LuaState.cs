@@ -5,7 +5,7 @@ namespace CSharpToLua.State;
 /// <summary>
 /// Lua状态机实现类
 /// </summary>
-public class LuaState : ILuaState
+public partial class LuaState : ILuaState
 {
     private readonly LuaStack stack;
 
@@ -272,5 +272,7 @@ public class LuaState : ILuaState
     {
         stack.Push(s);
     }
+
     #endregion
+
 } 

@@ -20,4 +20,35 @@ namespace CSharpToLua.API
         LUA_TUSERDATA,        // 完整用户数据（暂未实现）
         LUA_TTHREAD           // 协程类型（暂未实现）
     }
+
+    /// <summary>
+    /// Lua算术运算类型枚举
+    /// </summary>
+    public enum ArithOp
+    {
+        LUA_OPADD = 0,    // +加法
+        LUA_OPSUB = 1,    // -减法
+        LUA_OPMUL = 2,    // *乘法
+        LUA_OPMOD = 3,    // %取模
+        LUA_OPPOW = 4,    // ^乘方
+        LUA_OPDIV = 5,    // /浮点除法
+        LUA_OPIDIV = 6,   // //整数除法
+        LUA_OPBAND = 7,   // &按位与
+        LUA_OPBOR = 8,    // |按位或
+        LUA_OPBXOR = 9,   // ~按位异或
+        LUA_OPSHL = 10,   // <<左移
+        LUA_OPSHR = 11,   // >>右移
+        LUA_OPUNM = 12,   // -一元负号
+        LUA_OPBNOT = 13   // ~按位非
+    }
+
+    /// <summary>
+    /// Lua比较运算类型枚举
+    /// </summary>
+    public enum CompareOp
+    {
+        LUA_OPEQ = 0,     // ==等于
+        LUA_OPLT = 1,     // <小于
+        LUA_OPLE = 2      // <=小于等于
+    }
 }
