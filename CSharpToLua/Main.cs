@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using BinChunk;
+using CSharpToLua.API;
 using VirtualMachine;
 
 namespace CSharpToLua;
@@ -24,16 +25,33 @@ public class Program
         // 创建Lua状态机
 
         var ls = CSharpToLua.State.LuaState.New();
-        // 执行一系列栈操作并打印栈内容
-        ls.PushBoolean(true);     PrintStack(ls);
-        ls.PushInteger(10);       PrintStack(ls);
-        ls.PushNil();             PrintStack(ls);
-        ls.PushString("hello");   PrintStack(ls);
-        ls.PushValue(-4);         PrintStack(ls);
-        ls.Replace(3);            PrintStack(ls);
-        ls.SetTop(6);             PrintStack(ls);
-        ls.Remove(-3);            PrintStack(ls);
-        ls.SetTop(-5);            PrintStack(ls);
+        
+        // 压入测试数据
+        ls.PushInteger(1);
+        ls.PushString("2.0");
+        ls.PushString("3.0");
+        ls.PushNumber(4.0);
+        PrintStack(ls); // [1]["2.0"]["3.0"][4]
+
+        // 测试加法运算（LUA_OPADD）
+        ls.Arith(ArithOp.LUA_OPADD);
+        PrintStack(ls); // [1]["2.0"][7]
+
+        // 测试按位非运算（LUA_OPBNOT）
+        ls.Arith(ArithOp.LUA_OPBNOT);
+        PrintStack(ls); // [1]["2.0"][-8]
+
+        // 测试取长度（第2个元素是"2.0"）
+        ls.Len(2);
+        PrintStack(ls); // [1]["2.0"][-8][3]
+
+        // 测试连接3个元素（栈顶3个元素：3, ~5, 3）
+        ls.Concat(3);
+        PrintStack(ls); // [1]["2.0-83"]
+
+        // 比较位置1和位置2的值（1和"2.0"是否相等）
+        ls.PushBoolean(ls.Compare(1, 2, CompareOp.LUA_OPEQ));
+        PrintStack(ls); // [1]["2.0-83"][false]
     }
 
     /// <summary>
