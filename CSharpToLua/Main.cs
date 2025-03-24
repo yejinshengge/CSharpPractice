@@ -2,6 +2,7 @@
 
 using BinChunk;
 using CSharpToLua.API;
+using CSharpToLua.State;
 using VirtualMachine;
 
 namespace CSharpToLua;
@@ -24,7 +25,7 @@ public class Program
         
         // 创建Lua状态机
 
-        var ls = CSharpToLua.State.LuaState.New();
+        var ls = new LuaState();
         
         // 压入测试数据
         ls.PushInteger(1);

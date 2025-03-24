@@ -1,21 +1,27 @@
 using CSharpToLua.API;
+using BinChunk;
 
 namespace CSharpToLua.State;
 
 /// <summary>
 /// Lua状态机实现类
 /// </summary>
-public partial class LuaState : ILuaState
+public partial class LuaState : ILuaState, ILuaVm
 {
     private readonly LuaStack stack;
+    private Prototype proto;  // 当前执行的函数原型
+    private int pc;           // 程序计数器
 
     /// <summary>
-    /// 创建一个新的Lua状态机实例
+    /// 创建带有函数原型的Lua状态机实例
     /// </summary>
-    /// <returns>Lua状态机实例</returns>
-    public static LuaState New()
+    /// <param name="stackSize">初始栈大小</param>
+    /// <param name="proto">要执行的函数原型</param>
+    public LuaState(int stackSize, Prototype proto)
     {
-        return new LuaState();
+        this.stack = new LuaStack(stackSize);
+        this.proto = proto;
+        this.pc = 0;
     }
 
     /// <summary>

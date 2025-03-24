@@ -1,5 +1,5 @@
-namespace CSharpToLua.API
-{
+namespace CSharpToLua.API;
+
     /// <summary>
     /// Lua类型枚举，对应Lua API中的基础类型定义
     /// 设计说明：
@@ -51,4 +51,4 @@ namespace CSharpToLua.API
         LUA_OPLT = 1,     // <小于
         LUA_OPLE = 2      // <=小于等于
     }
-}
+
