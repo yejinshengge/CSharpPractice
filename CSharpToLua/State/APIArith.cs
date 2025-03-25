@@ -13,8 +13,8 @@ namespace CSharpToLua.State
         internal static readonly Func<long, long, long> IAdd = (a, b) => a + b;
         internal static readonly Func<long, long, long> ISub = (a, b) => a - b;
         internal static readonly Func<long, long, long> IMul = (a, b) => a * b;
-        internal static readonly Func<long, long, long> IMod = IMod;
-        internal static readonly Func<long, long, long> IIDiv = IFloorDiv;
+        internal static readonly Func<long, long, long> IMod = (a,b) => Number.LuaMath.IMod(a, b);
+        internal static readonly Func<long, long, long> IIDiv = (a,b) => IFloorDiv(a,b);
         internal static readonly Func<long, long, long> BAnd = (a, b) => a & b;
         internal static readonly Func<long, long, long> BOr = (a, b) => a | b;
         internal static readonly Func<long, long, long> BXor = (a, b) => a ^ b;
@@ -27,10 +27,10 @@ namespace CSharpToLua.State
         internal static readonly Func<double, double, double> FAdd = (a, b) => a + b;
         internal static readonly Func<double, double, double> FSub = (a, b) => a - b;
         internal static readonly Func<double, double, double> FMul = (a, b) => a * b;
-        internal static readonly Func<double, double, double> FMod = FMod;
+        internal static readonly Func<double, double, double> FMod = (a,b) => Number.LuaMath.FMod(a,b);
         internal static readonly Func<double, double, double> Pow = Math.Pow;
         internal static readonly Func<double, double, double> Div = (a, b) => a / b;
-        internal static readonly Func<double, double, double> FIDiv = FFloorDiv;
+        internal static readonly Func<double, double, double> FIDiv = (a,b) => FFloorDiv(a,b);
         internal static readonly Func<double, double, double> FUnm = (a, _) => -a;
 
         // 定义运算符结构体

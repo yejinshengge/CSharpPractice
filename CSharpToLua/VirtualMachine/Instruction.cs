@@ -1,4 +1,6 @@
-namespace VirtualMachine;
+using CSharpToLua.API;
+
+namespace CSharpToLua.VirtualMachine;
 
 /// <summary>
 /// Lua虚拟机指令解码结构
@@ -89,5 +91,29 @@ public readonly struct Instruction
     public OpArgType CMode()
     {
         return OpCodeInfo.Infos[(OpCode)Opcode()].ArgCMode;
+    }
+
+    /// <summary>
+    /// 执行当前指令
+    /// </summary>
+    /// <param name="vm">Lua虚拟机实例</param>
+    public void Execute(ILuaVm vm)
+    {
+        // 获取操作码对应的元数据
+        var opCode = (OpCode)Opcode();
+        if (!OpCodeInfo.Infos.TryGetValue(opCode, out var info))
+        {
+            throw new InvalidOperationException($"未知操作码: {opCode}");
+        }
+
+        // 执行指令对应的操作
+        if (info.Action != null)
+        {
+            info.Action.Invoke(this, vm);
+        }
+        else
+        {
+            throw new NotImplementedException($"未实现的操作码: {opCode} ({info.Name})");
+        }
     }
 }

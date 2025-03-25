@@ -18,7 +18,7 @@ public partial class LuaState
 
     public void GetConst(int idx)
     {
-        object constant = proto.Constants[idx - 1]; // Lua常量表索引从1开始
+        object constant = proto.Constants[idx]; // Lua常量表索引从1开始
         stack.Push(constant);
     }
 

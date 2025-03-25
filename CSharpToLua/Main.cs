@@ -3,7 +3,7 @@
 using BinChunk;
 using CSharpToLua.API;
 using CSharpToLua.State;
-using VirtualMachine;
+using CSharpToLua.VirtualMachine;
 
 namespace CSharpToLua;
 
@@ -11,13 +11,13 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        // string url = "D:\\CSharpPractice\\CSharpToLua\\LuaSource\\bin\\helloworld.out";
-        // // 读取文件内容
-        // byte[] data = File.ReadAllBytes(url);
+        string url = "D:\\CSharpPractice\\CSharpToLua\\LuaSource\\bin\\simplefor.out";
+        // 读取文件内容
+        byte[] data = File.ReadAllBytes(url);
 
-        // // 解析Lua字节码
-        // Prototype proto = BinaryChunkParser.Undump(data);
-
+        // 解析Lua字节码
+        Prototype proto = BinaryChunkParser.Undump(data);
+        LuaMain(proto);
         // // 列出函数原型信息
         // List(proto);
 
@@ -25,34 +25,58 @@ public class Program
         
         // 创建Lua状态机
 
-        var ls = new LuaState();
+        // var ls = new LuaState();
         
-        // 压入测试数据
-        ls.PushInteger(1);
-        ls.PushString("2.0");
-        ls.PushString("3.0");
-        ls.PushNumber(4.0);
-        PrintStack(ls); // [1]["2.0"]["3.0"][4]
+        // // 压入测试数据
+        // ls.PushInteger(1);
+        // ls.PushString("2.0");
+        // ls.PushString("3.0");
+        // ls.PushNumber(4.0);
+        // PrintStack(ls); // [1]["2.0"]["3.0"][4]
 
-        // 测试加法运算（LUA_OPADD）
-        ls.Arith(ArithOp.LUA_OPADD);
-        PrintStack(ls); // [1]["2.0"][7]
+        // // 测试加法运算（LUA_OPADD）
+        // ls.Arith(ArithOp.LUA_OPADD);
+        // PrintStack(ls); // [1]["2.0"][7]
 
-        // 测试按位非运算（LUA_OPBNOT）
-        ls.Arith(ArithOp.LUA_OPBNOT);
-        PrintStack(ls); // [1]["2.0"][-8]
+        // // 测试按位非运算（LUA_OPBNOT）
+        // ls.Arith(ArithOp.LUA_OPBNOT);
+        // PrintStack(ls); // [1]["2.0"][-8]
 
-        // 测试取长度（第2个元素是"2.0"）
-        ls.Len(2);
-        PrintStack(ls); // [1]["2.0"][-8][3]
+        // // 测试取长度（第2个元素是"2.0"）
+        // ls.Len(2);
+        // PrintStack(ls); // [1]["2.0"][-8][3]
 
-        // 测试连接3个元素（栈顶3个元素：3, ~5, 3）
-        ls.Concat(3);
-        PrintStack(ls); // [1]["2.0-83"]
+        // // 测试连接3个元素（栈顶3个元素：3, ~5, 3）
+        // ls.Concat(3);
+        // PrintStack(ls); // [1]["2.0-83"]
 
-        // 比较位置1和位置2的值（1和"2.0"是否相等）
-        ls.PushBoolean(ls.Compare(1, 2, CompareOp.LUA_OPEQ));
-        PrintStack(ls); // [1]["2.0-83"][false]
+        // // 比较位置1和位置2的值（1和"2.0"是否相等）
+        // ls.PushBoolean(ls.Compare(1, 2, CompareOp.LUA_OPEQ));
+        // PrintStack(ls); // [1]["2.0-83"][false]
+    }
+
+    static void LuaMain(Prototype proto){
+        var ls = new LuaState(proto.MaxStackSize + 8, proto);
+        ls.SetTop(proto.MaxStackSize);
+
+        // 执行主循环
+        while (true)
+        {
+            int pc = ls.PC;
+            uint code = ls.Fetch();
+            var inst = new Instruction(code);
+            
+            // 遇到RETURN指令时退出循环
+            if (inst.Opcode() == (int)OpCode.OpReturn)
+            {
+                break;
+            }
+
+            // 执行指令并打印调试信息
+            inst.Execute(ls);
+            Console.Write($"[{pc:D2}] {inst.OpName()} ");
+            PrintStack(ls);
+        }
     }
 
     /// <summary>

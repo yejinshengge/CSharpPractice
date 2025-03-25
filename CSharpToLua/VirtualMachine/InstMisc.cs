@@ -1,7 +1,6 @@
 using CSharpToLua.API;
-using VirtualMachine;
 
-namespace CSharpToLua.VM;
+namespace CSharpToLua.VirtualMachine;
 
 public static class InstMisc
 {
