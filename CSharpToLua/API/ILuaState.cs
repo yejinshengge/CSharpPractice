@@ -328,4 +328,28 @@ public interface ILuaState
     /// 2. 保持表在栈中的位置不变
     /// </remarks>
     void SetI(int idx, long i);
+
+    /// <summary>
+    /// 加载Lua代码块
+    /// </summary>
+    /// <param name="chunk">包含Lua代码的字节数组</param>
+    /// <param name="chunkName">代码块名称（用于错误消息和调试）</param>
+    /// <param name="mode">加载模式："b"表示二进制、"t"表示文本、"bt"表示两者都尝试</param>
+    /// <returns>状态码：0表示成功，非0表示错误</returns>
+    /// <remarks>
+    /// 成功时，编译后的函数被压入栈顶
+    /// 失败时，错误消息被压入栈顶
+    /// </remarks>
+    int Load(byte[] chunk, string chunkName, string mode);
+
+    /// <summary>
+    /// 调用Lua函数
+    /// </summary>
+    /// <param name="nArgs">参数数量（从栈顶向下计数）</param>
+    /// <param name="nResults">期望的返回值数量（特殊值-1表示返回所有值）</param>
+    /// <remarks>
+    /// 调用前，函数必须位于栈顶-nArgs处，参数按正序入栈（第一个参数最先入栈）
+    /// 调用后，原函数和参数被弹出，返回值按正序入栈（第一个返回值最先入栈）
+    /// </remarks>
+    void Call(int nArgs, int nResults);
 }

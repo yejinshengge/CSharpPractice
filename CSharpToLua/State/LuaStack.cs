@@ -14,7 +14,7 @@ using System.Collections.Generic;
 public class LuaStack
 {
     private readonly List<object> slots = new();
-    public int Top { get; private set; }
+    public int Top { get; set; }
 
     /// <summary>
     /// 上一级栈帧，用于实现栈帧链
@@ -148,6 +148,57 @@ public class LuaStack
             (slots[to], slots[from]) = (slots[from], slots[to]);
             from++;
             to--;
+        }
+    }
+
+    /// <summary>
+    /// 弹出多个栈顶元素
+    /// </summary>
+    /// <param name="n">要弹出的元素数量</param>
+    /// <returns>弹出的元素数组，索引0为最先弹出的元素</returns>
+    public object[] PopN(int n)
+    {
+        // 创建结果数组
+        object[] values = new object[n];
+        
+        // 从后向前弹出元素（保持原始顺序）
+        for (int i = n - 1; i >= 0; i--)
+        {
+            values[i] = Pop();
+        }
+        
+        return values;
+    }
+
+    /// <summary>
+    /// 批量压入元素到栈顶
+    /// </summary>
+    /// <param name="values">要压入的元素数组</param>
+    /// <param name="n">指定压入数量，负数表示压入全部</param>
+    /// <remarks>
+    /// 如果n大于数组长度，将用null值填充
+    /// 如果n小于0，将压入数组所有元素
+    /// </remarks>
+    public void PushN(object[] values, int n)
+    {
+        // 计算实际压入数量
+        int valueCount = values.Length;
+        if (n < 0)
+        {
+            n = valueCount;
+        }
+        
+        // 压入元素
+        for (int i = 0; i < n; i++)
+        {
+            if (i < valueCount)
+            {
+                Push(values[i]);
+            }
+            else
+            {
+                Push(null); // 压入nil值
+            }
         }
     }
 }
