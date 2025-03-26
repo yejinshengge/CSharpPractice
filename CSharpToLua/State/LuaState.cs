@@ -8,20 +8,17 @@ namespace CSharpToLua.State;
 /// </summary>
 public partial class LuaState : ILuaState, ILuaVm
 {
-    private readonly LuaStack stack;
-    private Prototype proto;  // 当前执行的函数原型
-    private int pc;           // 程序计数器
+    private LuaStack stack;
 
     /// <summary>
     /// 创建带有函数原型的Lua状态机实例
     /// </summary>
     /// <param name="stackSize">初始栈大小</param>
     /// <param name="proto">要执行的函数原型</param>
-    public LuaState(int stackSize, Prototype proto)
+    public LuaState(int stackSize)
     {
         this.stack = new LuaStack(stackSize);
-        this.proto = proto;
-        this.pc = 0;
+
     }
 
     /// <summary>
@@ -279,6 +276,44 @@ public partial class LuaState : ILuaState, ILuaVm
         stack.Push(s);
     }
 
+    
+
     #endregion
+
+    /// <summary>
+    /// 压入新的Lua栈帧
+    /// </summary>
+    /// <param name="newStack">要压入的新栈帧</param>
+    /// <remarks>
+    /// 新栈帧会成为当前活动栈帧，原有栈帧链接为prev
+    /// 用于函数调用时创建新的执行环境
+    /// </remarks>
+    public void PushLuaStack(LuaStack newStack)
+    {
+        // 新栈的prev指向当前栈
+        newStack.Prev = this.stack;
+        
+        // 更新当前栈为新栈
+        this.stack = newStack;
+    }
+
+    /// <summary>
+    /// 弹出当前Lua栈帧，恢复上一个栈帧
+    /// </summary>
+    /// <remarks>
+    /// 函数调用结束时，弹出当前执行环境，恢复调用者的环境
+    /// 移除当前栈与前一个栈的链接，有助于垃圾回收
+    /// </remarks>
+    public void PopLuaStack()
+    {
+        // 保存当前栈引用
+        LuaStack stack = this.stack;
+        
+        // 恢复前一个栈为当前栈
+        this.stack = stack.Prev;
+        
+        // 断开链接，帮助垃圾回收
+        stack.Prev = null;
+    }
 
 } 

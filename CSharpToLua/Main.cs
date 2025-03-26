@@ -56,7 +56,7 @@ public class Program
     }
 
     static void LuaMain(Prototype proto){
-        var ls = new LuaState(proto.MaxStackSize + 8, proto);
+        var ls = new LuaState(proto.MaxStackSize + 8);
         ls.SetTop(proto.MaxStackSize);
 
         // 执行主循环

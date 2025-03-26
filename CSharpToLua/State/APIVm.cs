@@ -2,23 +2,23 @@ namespace CSharpToLua.State;
 
 public partial class LuaState
 {
-    public int PC => pc;
+    public int PC => stack.PC;
 
     public void AddPC(int n)
     {
-        pc += n;
+        stack.PC += n;
     }
 
     public uint Fetch()
     {
-        uint code = proto.Code[pc];
-        pc++;
+        uint code = stack.Closure.Proto.Code[stack.PC];
+        stack.PC++;
         return code;
     }
 
     public void GetConst(int idx)
     {
-        object constant = proto.Constants[idx]; // Lua常量表索引从1开始
+        object constant = stack.Closure.Proto.Constants[idx];
         stack.Push(constant);
     }
 
