@@ -11,6 +11,10 @@ namespace CSharpToLua.State
             {
                 stack.Push((long)s.Length);
             }
+            else if(val is LuaTable t)
+            {
+                stack.Push((long)t.Length);
+            }
             else
             {
                 throw new System.Exception("长度错误：仅支持字符串类型");

@@ -11,15 +11,15 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        string url = "D:\\CSharpPractice\\CSharpToLua\\LuaSource\\bin\\simplefor.out";
+        string url = "D:\\CSharpPractice\\CSharpToLua\\LuaSource\\bin\\luatable.out";
         // 读取文件内容
         byte[] data = File.ReadAllBytes(url);
 
         // 解析Lua字节码
         Prototype proto = BinaryChunkParser.Undump(data);
-        LuaMain(proto);
         // // 列出函数原型信息
-        // List(proto);
+        List(proto);
+        LuaMain(proto);
 
 
         
@@ -74,7 +74,7 @@ public class Program
 
             // 执行指令并打印调试信息
             inst.Execute(ls);
-            Console.Write($"[{pc:D2}] {inst.OpName()} ");
+            Console.Write($"[{pc+1:D2}] {inst.OpName()} ");
             PrintStack(ls);
         }
     }

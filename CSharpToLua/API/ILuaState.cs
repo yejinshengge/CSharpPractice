@@ -249,4 +249,83 @@ public interface ILuaState
     /// </summary>
     /// <param name="n">要拼接的值的数量</param>
     void Concat(int n);
+
+    /* 表创建方法 */
+    
+    /// <summary>
+    /// 创建并压入一个空表（相当于lua_createtable(L, 0, 0)）
+    /// </summary>
+    void NewTable();
+
+    /// <summary>
+    /// 创建并压入一个预分配大小的表
+    /// </summary>
+    /// <param name="arraySize">预估数组部分大小</param>
+    /// <param name="recordSize">预估哈希表部分大小</param>
+    void CreateTable(int arraySize, int recordSize);
+
+    /* 表读取方法 */
+    
+    /// <summary>
+    /// 从表中获取值（操作：t[k]，其中t=idx处的表，k=栈顶值）
+    /// </summary>
+    /// <param name="idx">表在栈中的位置</param>
+    /// <returns>获取值的类型</returns>
+    /// <remarks>
+    /// 1. 弹出栈顶的键
+    /// 2. 将查询结果压入栈顶
+    /// </remarks>
+    LuaType GetTable(int idx);
+
+    /// <summary>
+    /// 通过字符串键从表中获取值（t.k）
+    /// </summary>
+    /// <param name="idx">表在栈中的位置</param>
+    /// <param name="key">字符串键</param>
+    /// <returns>获取值的类型</returns>
+    /// <remarks>结果值会压入栈顶</remarks>
+    LuaType GetField(int idx, string key);
+
+    /// <summary>
+    /// 通过整数键从表中获取值（t[i]）
+    /// </summary>
+    /// <param name="idx">表在栈中的位置</param>
+    /// <param name="i">整数键（1-based）</param>
+    /// <returns>获取值的类型</returns>
+    /// <remarks>结果值会压入栈顶</remarks>
+    LuaType GetI(int idx, long i);
+
+    /* 表写入方法 */
+    
+    /// <summary>
+    /// 设置表的值（操作：t[k] = v，其中t=idx处的表，k=栈顶-1，v=栈顶）
+    /// </summary>
+    /// <param name="idx">表在栈中的位置</param>
+    /// <remarks>
+    /// 1. 弹出键和值
+    /// 2. 保持表在栈中的位置不变
+    /// </remarks>
+    void SetTable(int idx);
+
+    /// <summary>
+    /// 通过字符串键设置表的值（t.k = v）
+    /// </summary>
+    /// <param name="idx">表在栈中的位置</param>
+    /// <param name="key">字符串键</param>
+    /// <remarks>
+    /// 1. 弹出栈顶的值
+    /// 2. 保持表在栈中的位置不变
+    /// </remarks>
+    void SetField(int idx, string key);
+
+    /// <summary>
+    /// 通过整数键设置表的值（t[i] = v）
+    /// </summary>
+    /// <param name="idx">表在栈中的位置</param>
+    /// <param name="i">整数键（1-based）</param>
+    /// <remarks>
+    /// 1. 弹出栈顶的值
+    /// 2. 保持表在栈中的位置不变
+    /// </remarks>
+    void SetI(int idx, long i);
 }

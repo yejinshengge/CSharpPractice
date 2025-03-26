@@ -31,6 +31,8 @@ namespace CSharpToLua.State
                     return LuaType.LUA_TNUMBER;
                 case string _:// 处理字符串类型
                     return LuaType.LUA_TSTRING;
+                case LuaTable _:// 处理表类型
+                    return LuaType.LUA_TTABLE;
                 default:      // 未实现的类型处理
                     throw new System.NotImplementedException(
                         $"暂不支持的类型: {val.GetType().Name}, 需要扩展类型判断逻辑");
