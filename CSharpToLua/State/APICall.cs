@@ -80,7 +80,7 @@ public partial class LuaState
         // 处理可变参数
         if (nArgs > nParams && isVararg)
         {
-            newStack.VarArgs = args.Skip(nParams).ToList();
+            newStack.VarArgs = args.Skip(nParams+1).ToList();
         }
         
         // 压入调用帧

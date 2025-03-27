@@ -101,7 +101,7 @@ public class LuaStack
     /// </summary>
     public int AbsIndex(int idx)
     {
-        return idx >= 0 ? idx : idx + Top + 1;
+        return idx > 0 ? idx : idx + Top + 1;
     }
 
     /// <summary>
@@ -143,11 +143,13 @@ public class LuaStack
     /// <param name="to">结束索引（包含）</param>
     public void Reverse(int from, int to)
     {
-        while (from < to)
+        if(to > from)
         {
-            (slots[to], slots[from]) = (slots[from], slots[to]);
-            from++;
-            to--;
+            slots.Reverse(from, to - from + 1);
+        }
+        else if(to < from)
+        {
+            slots.Reverse(to, from - to + 1);
         }
     }
 

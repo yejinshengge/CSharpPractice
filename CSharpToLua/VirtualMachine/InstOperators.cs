@@ -226,6 +226,7 @@ public static class InstOperators
         // 调整寄存器索引（Lua寄存器从1开始）
         a += 1;
         b += 1;
+        c += 1;
 
         // 判断条件是否满足
         bool condition = vm.ToBoolean(b) == (c != 0);
@@ -254,7 +255,7 @@ public static class InstOperators
         
         // 调整寄存器索引（Lua寄存器从1开始）
         a += 1;
-
+        c += 1;
         // 判断条件是否满足
         // 当寄存器a的值与c参数的条件不一致时执行跳转
         bool condition = vm.ToBoolean(a) != (c != 0);

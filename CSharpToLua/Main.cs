@@ -11,15 +11,18 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        string url = "D:\\CSharpPractice\\CSharpToLua\\LuaSource\\bin\\luatable.out";
+        string url = "D:\\CSharpPractice\\CSharpToLua\\LuaSource\\bin\\functioncall.out";
         // 读取文件内容
         byte[] data = File.ReadAllBytes(url);
+        LuaState ls = new LuaState();
+        ls.Load(data, url, "b");
+        ls.Call(0, 0);
 
-        // 解析Lua字节码
-        Prototype proto = BinaryChunkParser.Undump(data);
-        // // 列出函数原型信息
-        List(proto);
-        LuaMain(proto);
+        // // 解析Lua字节码
+        // Prototype proto = BinaryChunkParser.Undump(data);
+        // // // 列出函数原型信息
+        // List(proto);
+        // LuaMain(proto);
 
 
         
@@ -75,7 +78,7 @@ public class Program
             // 执行指令并打印调试信息
             inst.Execute(ls);
             Console.Write($"[{pc+1:D2}] {inst.OpName()} ");
-            PrintStack(ls);
+            Instruction.PrintStack(ls);
         }
     }
 
@@ -333,32 +336,4 @@ public class Program
         return "-";
     }
 
-    /// <summary>
-    /// 打印Lua状态机的栈内容
-    /// </summary>
-    /// <param name="ls">Lua状态机实例</param>
-    public static void PrintStack(CSharpToLua.API.ILuaState ls)
-    {
-        int top = ls.GetTop();
-        for (int i = 1; i <= top; i++)
-        {
-            var t = ls.Type(i);
-            switch (t)
-            {
-                case CSharpToLua.API.LuaType.LUA_TBOOLEAN:
-                    Console.Write($"[{ls.ToBoolean(i).ToString().ToLower()}]");
-                    break;
-                case CSharpToLua.API.LuaType.LUA_TNUMBER:
-                    Console.Write($"[{ls.ToNumber(i)}]");
-                    break;
-                case CSharpToLua.API.LuaType.LUA_TSTRING:
-                    Console.Write($"[\"{ls.ToString(i)}\"]");
-                    break;
-                default:
-                    Console.Write($"[{ls.TypeName(t)}]");
-                    break;
-            }
-        }
-        Console.WriteLine();
-    }
 }

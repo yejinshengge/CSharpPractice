@@ -37,4 +37,22 @@ public interface ILuaVm : ILuaState
     /// 否则表示寄存器索引（从1开始）
     /// </param>
     void GetRK(int rk);
+
+    /// <summary>
+    /// 获取当前函数的寄存器数量
+    /// </summary>
+    /// <returns>寄存器数量</returns>
+    int RegisterCount();
+
+    /// <summary>
+    /// 加载指定数量的变长参数到栈顶
+    /// </summary>
+    /// <param name="n">要加载的变长参数数量，-1表示加载所有</param>
+    void LoadVararg(int n);
+
+    /// <summary>
+    /// 加载指定索引的函数原型并创建闭包
+    /// </summary>
+    /// <param name="idx">函数原型在当前Proto的子函数表中的索引</param>
+    void LoadProto(int idx);
 }

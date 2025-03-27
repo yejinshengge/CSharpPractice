@@ -123,7 +123,7 @@ public class LuaTable
                 _arr[arrayIndex] = val;
                 
                 // 如果设置末尾元素为null，需要收缩数组
-                if (arrayIndex == _arr.Count - 1 && val == null)
+                if (arrayIndex == _arr.Count && val == null)
                 {
                     ShrinkArray();
                 }

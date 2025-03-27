@@ -216,7 +216,7 @@ public readonly struct OpCodeInfo
         [OpCode.OpNewTable] = new OpCodeInfo(0, 1, OpArgType.OpArgU, OpArgType.OpArgU, InstructionMode.IABC, "NEWTABLE", InstTable.NewTable),
 
         // 准备方法调用：R(A+1) = R(B); R(A) = R(B)[RK(C)]
-        [OpCode.OpSelf] = new OpCodeInfo(0, 1, OpArgType.OpArgR, OpArgType.OpArgK, InstructionMode.IABC, "SELF", null),
+        [OpCode.OpSelf] = new OpCodeInfo(0, 1, OpArgType.OpArgR, OpArgType.OpArgK, InstructionMode.IABC, "SELF", InstCall.Self),
 
         // 加法运算：R(A) = RK(B) + RK(C)
         [OpCode.OpAdd] = new OpCodeInfo(0, 1, OpArgType.OpArgK, OpArgType.OpArgK, InstructionMode.IABC, "ADD", InstOperators.Add),
@@ -288,13 +288,13 @@ public readonly struct OpCodeInfo
         [OpCode.OpTestSet] = new OpCodeInfo(1, 1, OpArgType.OpArgR, OpArgType.OpArgU, InstructionMode.IABC, "TESTSET", InstOperators.TestSet),
 
         // 函数调用：R(A), ... ,R(A+C-2) = R(A)(R(A+1), ... ,R(A+B-1))
-        [OpCode.OpCall] = new OpCodeInfo(0, 1, OpArgType.OpArgU, OpArgType.OpArgU, InstructionMode.IABC, "CALL", null),
+        [OpCode.OpCall] = new OpCodeInfo(0, 1, OpArgType.OpArgU, OpArgType.OpArgU, InstructionMode.IABC, "CALL", InstCall.Call),
 
         // 尾调用：return R(A)(R(A+1), ... ,R(A+B-1))
-        [OpCode.OpTailCall] = new OpCodeInfo(0, 1, OpArgType.OpArgU, OpArgType.OpArgU, InstructionMode.IABC, "TAILCALL", null),
+        [OpCode.OpTailCall] = new OpCodeInfo(0, 1, OpArgType.OpArgU, OpArgType.OpArgU, InstructionMode.IABC, "TAILCALL", InstCall.TailCall),
 
         // 函数返回：return R(A), ... ,R(A+B-2)
-        [OpCode.OpReturn] = new OpCodeInfo(0, 0, OpArgType.OpArgU, OpArgType.OpArgN, InstructionMode.IABC, "RETURN", null),
+        [OpCode.OpReturn] = new OpCodeInfo(0, 0, OpArgType.OpArgU, OpArgType.OpArgN, InstructionMode.IABC, "RETURN", InstCall.Return),
 
         // for循环：R(A)+=R(A+2); pc += sBx
         [OpCode.OpForLoop] = new OpCodeInfo(0, 1, OpArgType.OpArgR, OpArgType.OpArgN, InstructionMode.IAsBx, "FORLOOP", InstFor.ForLoop),
@@ -312,10 +312,10 @@ public readonly struct OpCodeInfo
         [OpCode.OpSetList] = new OpCodeInfo(0, 0, OpArgType.OpArgU, OpArgType.OpArgU, InstructionMode.IABC, "SETLIST", InstTable.SetList),
 
         // 创建闭包：R(A) = closure(KPROTO[Bx], R(A), ... ,R(A+n))
-        [OpCode.OpClosure] = new OpCodeInfo(0, 1, OpArgType.OpArgU, OpArgType.OpArgN, InstructionMode.IABx, "CLOSURE", null),
+        [OpCode.OpClosure] = new OpCodeInfo(0, 1, OpArgType.OpArgU, OpArgType.OpArgN, InstructionMode.IABx, "CLOSURE", InstCall.Closure),
 
         // 处理可变参数：R(A), R(A+1), ..., R(A+B-2) = vararg
-        [OpCode.OpVararg] = new OpCodeInfo(0, 1, OpArgType.OpArgU, OpArgType.OpArgN, InstructionMode.IABC, "VARARG", null),
+        [OpCode.OpVararg] = new OpCodeInfo(0, 1, OpArgType.OpArgU, OpArgType.OpArgN, InstructionMode.IABC, "VARARG", InstCall.Vararg),
 
         // 扩展参数：ExtraArg = Ax
         [OpCode.OpExtraArg] = new OpCodeInfo(0, 0, OpArgType.OpArgU, OpArgType.OpArgU, InstructionMode.IAx, "EXTRAARG", null)

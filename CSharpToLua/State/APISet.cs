@@ -10,12 +10,10 @@ public partial class LuaState
     /// <param name="idx">表在栈中的位置</param>
     public void SetTable(int idx)
     {
-        // 获取表、值、键（注意弹出顺序）
-        var table = stack.Get(idx);
         var value = stack.Pop();
         var key = stack.Pop();
         
-        _setTableInternal(table, key, value);
+        _setTableInternal(idx, key, value);
     }
 
     /// <summary>
@@ -24,14 +22,15 @@ public partial class LuaState
     /// <param name="tableObj">表对象</param>
     /// <param name="key">键</param>
     /// <param name="value">值</param>
-    private void _setTableInternal(object tableObj, object key, object value)
+    private void _setTableInternal(int idx, object key, object value)
     {
-        if (tableObj is not LuaTable table)
+        object v = stack.Get(idx);
+        if(v is not LuaTable table)
         {
             throw new InvalidOperationException("操作对象不是表类型");
         }
-        
         table.Put(key, value);
+        stack.Set(idx, table);
     }
 
     /// <summary>
@@ -41,9 +40,8 @@ public partial class LuaState
     /// <param name="key">字符串键</param>
     public void SetField(int idx, string key)
     {
-        var table = stack.Get(idx);
         var value = stack.Pop();
-        _setTableInternal(table, key, value);
+        _setTableInternal(idx, key, value);
     }
 
     /// <summary>
@@ -53,8 +51,7 @@ public partial class LuaState
     /// <param name="key">整数键（1-based）</param>
     public void SetI(int idx, long key)
     {
-        var table = stack.Get(idx);
         var value = stack.Pop();
-        _setTableInternal(table, key, value);
+        _setTableInternal(idx, key, value);
     }
 }

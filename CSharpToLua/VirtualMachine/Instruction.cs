@@ -116,4 +116,33 @@ public readonly struct Instruction
             throw new NotImplementedException($"未实现的操作码: {opCode} ({info.Name})");
         }
     }
+
+    /// <summary>
+    /// 打印Lua状态机的栈内容
+    /// </summary>
+    /// <param name="ls">Lua状态机实例</param>
+    public static void PrintStack(CSharpToLua.API.ILuaState ls)
+    {
+        int top = ls.GetTop();
+        for (int i = 1; i <= top; i++)
+        {
+            var t = ls.Type(i);
+            switch (t)
+            {
+                case CSharpToLua.API.LuaType.LUA_TBOOLEAN:
+                    Console.Write($"[{ls.ToBoolean(i).ToString().ToLower()}]");
+                    break;
+                case CSharpToLua.API.LuaType.LUA_TNUMBER:
+                    Console.Write($"[{ls.ToNumber(i)}]");
+                    break;
+                case CSharpToLua.API.LuaType.LUA_TSTRING:
+                    Console.Write($"[\"{ls.ToString(i)}\"]");
+                    break;
+                default:
+                    Console.Write($"[{ls.TypeName(t)}]");
+                    break;
+            }
+        }
+        Console.WriteLine();
+    }
 }
