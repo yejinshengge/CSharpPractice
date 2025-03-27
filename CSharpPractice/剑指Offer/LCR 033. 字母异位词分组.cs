@@ -18,9 +18,11 @@ public class LeetCode_LCR033
         IList<IList<string>> res = new List<IList<string>>();
         foreach (var str in strs)
         {
+            // 排序
             var chars = str.ToCharArray();
             Array.Sort(chars);
             string key = new string(chars);
+            // 没有该组
             if (!dic.ContainsKey(key))
             {
                 IList<string> group = new List<string>();
@@ -28,6 +30,7 @@ public class LeetCode_LCR033
                 res.Add(group);
                 dic[key] = res.Count - 1;
             }
+            // 有该组
             else
             {
                 res[dic[key]].Add(str);
@@ -37,6 +40,7 @@ public class LeetCode_LCR033
         return res;
     }
 
+    // 将每个字符映射为一个质数
     private int[] charMap = new[] { 2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97,101 };
     public IList<IList<string>> GroupAnagrams(string[] strs)
     {
@@ -44,11 +48,13 @@ public class LeetCode_LCR033
         IList<IList<string>> res = new List<IList<string>>();
         foreach (var str in strs)
         {
+            // 计算key
             long key = 1;
             foreach (var c in str)
             {
                 key *= charMap[c - 'a'];
             }
+            // 没有该组
             if (!dic.ContainsKey(key))
             {
                 IList<string> group = new List<string>();
@@ -56,6 +62,7 @@ public class LeetCode_LCR033
                 res.Add(group);
                 dic[key] = res.Count - 1;
             }
+            // 有该组
             else
             {
                 res[dic[key]].Add(str);

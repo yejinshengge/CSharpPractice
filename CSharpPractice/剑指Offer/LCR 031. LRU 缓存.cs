@@ -38,12 +38,14 @@ public class LRUCache
         if (!_dic.ContainsKey(key))
             return -1;
         var cur = _dic[key];
+        // 删除当前节点
         var prev = cur.prev;
         var next = cur.next;
 
         prev.next = next;
         next.prev = prev;
 
+        // 将当前节点插入到链表尾部
         cur.next = _tail;
         cur.prev = _tail.prev;
         _tail.prev = cur;
@@ -64,6 +66,7 @@ public class LRUCache
                 _head.next.prev = _head;
             }
             _dic[key] = new ListNode(key, value);
+            // 将当前节点插入到链表尾部
             var prev = _tail.prev;
             prev.next = _dic[key];
             _dic[key].prev = prev;
@@ -75,12 +78,14 @@ public class LRUCache
         {
             _dic[key].val = value;
             var cur = _dic[key];
+            // 删除当前节点
             var prev = cur.prev;
             var next = cur.next;
 
             prev.next = next;
             next.prev = prev;
 
+            // 将当前节点插入到链表尾部
             cur.next = _tail;
             cur.prev = _tail.prev;
             _tail.prev = cur;

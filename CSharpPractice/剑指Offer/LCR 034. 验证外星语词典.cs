@@ -13,6 +13,7 @@ public class LeetCode_LCR034
     public bool IsAlienSorted(string[] words, string order)
     {
         int[] map = new int[26];
+        // 记录每个字符的字典序
         for (int i = 0; i < order.Length; i++)
         {
             map[order[i] - 'a'] = i;
@@ -22,6 +23,7 @@ public class LeetCode_LCR034
         {
             string word1 = words[i];
             string word2 = words[i+1];
+            // 检查两个单词是否符合字典序
             if (!_check(word1, word2, map))
                 return false;
         }

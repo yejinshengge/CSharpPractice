@@ -20,18 +20,27 @@ public class LeetCode_0581
     public int FindUnsortedSubarray(int[] nums)
     {
         Stack<int> stack = new Stack<int>();
-        int left = nums.Length,right = 0;
+        // left记录需要排序的最左边界，right记录最右边界
+        int left = nums.Length, right = 0;
+        
+        // 第一次遍历：从左到右，找最左边界
         for (int i = 0; i < nums.Length; i++)
         {
+            // 当栈不为空，且栈顶元素大于当前元素时
+            // 说明找到了一个逆序对，需要更新left
             while (stack.Count > 0 && nums[stack.Peek()] > nums[i])
             {
                 left = Math.Min(left, stack.Pop());
             }
             stack.Push(i);
         }
+        
         stack.Clear();
-        for (int i = nums.Length-1; i >=0; i--)
+        // 第二次遍历：从右到左，找最右边界
+        for (int i = nums.Length-1; i >= 0; i--)
         {
+            // 当栈不为空，且栈顶元素小于当前元素时
+            // 说明找到了一个逆序对，需要更新right
             while (stack.Count > 0 && nums[stack.Peek()] < nums[i])
             {
                 right = Math.Max(right, stack.Pop());
@@ -39,6 +48,8 @@ public class LeetCode_0581
             stack.Push(i);
         }
 
-        return right>left ?right - left + 1:0;
+        // 如果right > left说明找到了需要排序的子数组
+        // 否则说明数组已经有序
+        return right > left ? right - left + 1 : 0;
     }
 }

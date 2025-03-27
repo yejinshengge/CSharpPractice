@@ -16,10 +16,12 @@ public class LeetCode_LCR109
     public int OpenLock1(string[] deadends, string target)
     {
         HashSet<string> visited = new();
+        // 不可达的节点
         HashSet<string> dead = new(deadends);
         if (dead.Contains("0000")) return -1;
         Queue<string> queue = new();
         int minCnt = 0;
+        // 将初始节点加入图
         queue.Enqueue("0000");
         visited.Add("0000");
         while (queue.Count > 0)
@@ -29,6 +31,7 @@ public class LeetCode_LCR109
             {
                 var cur = queue.Dequeue();
                 if (cur == target) return minCnt;
+                // 将相邻节点加入图
                 var neighbors = _getNeighbors(cur);
                 foreach (var neighbor in neighbors)
                 {
@@ -48,6 +51,7 @@ public class LeetCode_LCR109
     {
         HashSet<string> visited = new();
         HashSet<string> dead = new(deadends);
+        // 不可达的节点
         if (dead.Contains("0000")) return -1;
         if (target == "0000") return 0;
         HashSet<string> front = new();
