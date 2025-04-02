@@ -1,4 +1,5 @@
 using CSharpToLua.API;
+using System;
 
 namespace CSharpToLua.VirtualMachine;
 
@@ -106,14 +107,50 @@ public readonly struct Instruction
             throw new InvalidOperationException($"未知操作码: {opCode}");
         }
 
+        // 获取指令参数并格式化为日志字符串
+        string paramsStr = FormatInstructionParams(opCode, info.OpMode);
+        
+        Console.WriteLine($"执行指令: {info.Name} {paramsStr}");
+        
         // 执行指令对应的操作
         if (info.Action != null)
         {
+            Console.WriteLine($"执行前堆栈");
+            PrintStack(vm);
             info.Action.Invoke(this, vm);
+            Console.WriteLine($"执行后堆栈");
+            PrintStack(vm);
         }
         else
         {
             throw new NotImplementedException($"未实现的操作码: {opCode} ({info.Name})");
+        }
+    }
+
+    /// <summary>
+    /// 格式化指令参数为可读字符串
+    /// </summary>
+    private string FormatInstructionParams(OpCode opCode, InstructionMode mode)
+    {
+        switch (mode)
+        {
+            case InstructionMode.IABC:
+                var (a, b, c) = ABC();
+                return $"A:{a} B:{b} C:{c}";
+            
+            case InstructionMode.IABx:
+                var (aB, bx) = ABx();
+                return $"A:{aB} Bx:{bx}";
+            
+            case InstructionMode.IAsBx:
+                var (aS, sBx) = AsBx();
+                return $"A:{aS} sBx:{sBx}";
+            
+            case InstructionMode.IAx:
+                return $"Ax:{Ax()}";
+            
+            default:
+                return "未知参数格式";
         }
     }
 
@@ -123,8 +160,11 @@ public readonly struct Instruction
     /// <param name="ls">Lua状态机实例</param>
     public static void PrintStack(CSharpToLua.API.ILuaState ls)
     {
-        int top = ls.GetTop();
-        for (int i = 1; i <= top; i++)
+        PrintStack(ls,1,ls.GetTop());
+    }
+    public static void PrintStack(CSharpToLua.API.ILuaState ls,int start,int end)
+    {
+        for (int i = start; i <= end; i++)
         {
             var t = ls.Type(i);
             switch (t)

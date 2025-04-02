@@ -14,13 +14,13 @@ public class Program
         string url = "D:\\CSharpPractice\\CSharpToLua\\LuaSource\\bin\\functioncall.out";
         // 读取文件内容
         byte[] data = File.ReadAllBytes(url);
-        LuaState ls = new LuaState();
+        LuaState ls = new LuaState(20);
         ls.Load(data, url, "b");
         ls.Call(0, 0);
 
         // // 解析Lua字节码
         // Prototype proto = BinaryChunkParser.Undump(data);
-        // // // 列出函数原型信息
+        // // 列出函数原型信息
         // List(proto);
         // LuaMain(proto);
 
