@@ -12,6 +12,7 @@ public class LeetCode_LCR035
     
     public int FindMinDifference1(IList<string> timePoints)
     {
+        // 按分钟数排序
         int[] arr = new int[timePoints.Count];
         for (int i = 0; i < timePoints.Count; i++)
         {
@@ -20,17 +21,20 @@ public class LeetCode_LCR035
             arr[i] = int.Parse(nums[0]) * 60 + int.Parse(nums[1]);
         }
         Array.Sort(arr);
+        // 计算最小时间差
         int min = int.MaxValue;
         for (int i = 1; i < arr.Length; i++)
         {
             min = Math.Min(arr[i] - arr[i - 1], min);
         }
+        // 考虑反向时间差
         min = Math.Min(1440 - arr[^1] + arr[0], min);
         return min;
     }
     
     public int FindMinDifference(IList<string> timePoints)
     {
+        // 桶排序
         bool[] arr = new bool[1440];
         for (int i = 0; i < timePoints.Count; i++)
         {
@@ -41,6 +45,7 @@ public class LeetCode_LCR035
                 return 0;
             arr[target] = true;
         }
+        // 计算最小时间差
         int min = int.MaxValue;
         int cur = -1, pre = -1, first = -1;
         for (int i = 0; i < arr.Length; i++)
@@ -56,6 +61,7 @@ public class LeetCode_LCR035
                 pre = i;
             }
         }
+        // 考虑反向时间差
         min = Math.Min(1440 - cur + first, min);
         return min;
     }

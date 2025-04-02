@@ -16,7 +16,9 @@ public class LeetCode_LCR020
         int count = 0;
         for (int i = 0; i < s.Length; i++)
         {
+            // 奇数长度 以i为中心
             count += _palindrome(s, i, i);
+            // 偶数长度 以i和i+1为中心
             count += _palindrome(s, i, i+1);
         }
 
@@ -54,12 +56,14 @@ public class LeetCode_LCR020
         int res = 0;
         for (int i = 1; i < sb.Length-1; i++)
         {
+            // 1.超过最大回文半径范围，从1开始暴力枚举
+            // 2.在最大回文半径范围内，找对称点。
             f[i] = i > maxR ? 1 : Math.Min(maxR - i + 1, f[2 * maxIndex - i]);
             while (sb[i + f[i]] == sb[i - f[i]])
             {
                 f[i]++;
             }
-
+            // 更新最大回文半径
             if (i + f[i] - 1 > maxR)
             {
                 maxIndex = i;

@@ -17,6 +17,7 @@ public class LeetCode_LCR027
     public bool IsPalindrome(ListNode head)
     {
         if (head.next == null) return true;
+        // 快慢指针找到链表中点
         ListNode fast = head, slow = head;
         while (fast != null && fast.next != null)
         {
@@ -24,6 +25,7 @@ public class LeetCode_LCR027
             fast = fast.next;
             slow = slow.next;
         }
+        // 反转后半部分链表
         ListNode pre = null;
         while (slow != null)
         {
@@ -32,7 +34,7 @@ public class LeetCode_LCR027
             pre = slow;
             slow = next;
         }
-        
+        // 比较前半部分和后半部分链表
         fast = head;
         slow = pre;
         while (slow!= null)
