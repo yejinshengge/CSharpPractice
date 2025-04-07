@@ -14,7 +14,14 @@ using CSharpToLua.API;
 /// </summary>
 public class LuaStack
 {
-    private readonly List<object> slots = new();
+    /// <summary>
+    /// 栈的存储
+    /// </summary>
+    public readonly List<object> Slots = new();
+
+    /// <summary>
+    /// 栈顶索引
+    /// </summary>
     public int Top { get; set; }
 
     /// <summary>
@@ -37,6 +44,11 @@ public class LuaStack
     /// </summary>
     public int PC { get; set; }
 
+    /// <summary>
+    /// 在栈上的外围函数局部变量 
+    /// </summary>
+    public Dictionary<int,Upvalue> OpenUpvalues { get; set; }
+
     private LuaState luaState;
 
     /// <summary>
@@ -47,7 +59,7 @@ public class LuaStack
         // 预填充null元素模拟Lua栈初始状态
         for (int i = 0; i < size; i++)
         {
-            slots.Add(null);
+            Slots.Add(null);
         }
         Top = 0;
 
@@ -64,10 +76,10 @@ public class LuaStack
     /// </summary>
     public void Check(int n)
     {
-        int free = slots.Count - Top;
+        int free = Slots.Count - Top;
         for (int i = free; i < n; i++)
         {
-            slots.Add(null);
+            Slots.Add(null);
         }
     }
 
@@ -76,11 +88,11 @@ public class LuaStack
     /// </summary>
     public void Push(object val)
     {
-        if (Top == slots.Count)
+        if (Top == Slots.Count)
         {
             throw new System.StackOverflowException("Lua栈溢出");
         }
-        slots[Top++] = val;
+        Slots[Top++] = val;
     }
 
     /// <summary>
@@ -92,8 +104,8 @@ public class LuaStack
         {
             throw new System.InvalidOperationException("Lua栈下溢");
         }
-        var val = slots[--Top];
-        slots[Top] = null; // 帮助GC回收
+        var val = Slots[--Top];
+        Slots[Top] = null; // 帮助GC回收
         return val;
     }
 
@@ -115,6 +127,13 @@ public class LuaStack
     /// </summary>
     public bool IsValid(int idx)
     {
+        // upvalue伪索引
+        if(idx < Consts.LUA_REGISTRYINDEX)
+        {
+            var index = Consts.LUA_REGISTRYINDEX - idx - 1;
+            return Closure != null && index < Closure.Upvalues.Length;
+        }
+        // 注册表伪索引
         if(idx == Consts.LUA_REGISTRYINDEX)
             return true;
         int absIdx = AbsIndex(idx);
@@ -126,10 +145,19 @@ public class LuaStack
     /// </summary>
     public object Get(int idx)
     {
+        // upvalue伪索引
+        if(idx < Consts.LUA_REGISTRYINDEX)
+        {
+            var index = Consts.LUA_REGISTRYINDEX - idx - 1;
+            if(Closure == null || index >= Closure.Upvalues.Length)
+                return null;
+            return Closure.Upvalues[index].Value;
+        }
+        // 注册表伪索引
         if(idx == Consts.LUA_REGISTRYINDEX)
             return luaState.Registry;
         int absIdx = AbsIndex(idx);
-        return absIdx > 0 && absIdx <= Top ? slots[absIdx - 1] : null;
+        return absIdx > 0 && absIdx <= Top ? Slots[absIdx - 1] : null;
     }
 
     /// <summary>
@@ -137,6 +165,16 @@ public class LuaStack
     /// </summary>
     public void Set(int idx, object val)
     {
+        // upvalue伪索引
+        if(idx < Consts.LUA_REGISTRYINDEX)
+        {
+            var index = Consts.LUA_REGISTRYINDEX - idx - 1;
+            if(Closure == null || index >= Closure.Upvalues.Length)
+                return;
+            Closure.Upvalues[index].Value = val;
+            return;
+        }
+        // 注册表伪索引
         if(idx == Consts.LUA_REGISTRYINDEX)
         {
             luaState.Registry = val as LuaTable;
@@ -145,7 +183,7 @@ public class LuaStack
         int absIdx = AbsIndex(idx);
         if (absIdx > 0 && absIdx <= Top)
         {
-            slots[absIdx - 1] = val;
+            Slots[absIdx - 1] = val;
             return;
         }
         throw new System.ArgumentOutOfRangeException($"无效栈索引: {idx}");
@@ -160,11 +198,11 @@ public class LuaStack
     {
         if(to > from)
         {
-            slots.Reverse(from, to - from + 1);
+            Slots.Reverse(from, to - from + 1);
         }
         else if(to < from)
         {
-            slots.Reverse(to, from - to + 1);
+            Slots.Reverse(to, from - to + 1);
         }
     }
 

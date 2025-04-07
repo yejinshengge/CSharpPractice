@@ -3,6 +3,11 @@ using CSharpToLua.API;
 
 namespace CSharpToLua.State;
 
+public class Upvalue
+{
+    internal object Value;
+}
+
 /// <summary>
 /// Lua闭包实现类
 /// 功能：封装函数原型，用于执行Lua代码
@@ -19,6 +24,8 @@ public class LuaClosure
     /// </summary>
     public CsharpFunction CSharpFunction { get; set; }
 
+    public Upvalue[] Upvalues { get; set; }
+
     /// <summary>
     /// 创建Lua闭包
     /// </summary>
@@ -26,14 +33,22 @@ public class LuaClosure
     public LuaClosure(Prototype proto)
     {
         Proto = proto;
+        if(proto.Upvalues != null && proto.Upvalues.Length > 0)
+        {
+            Upvalues = new Upvalue[proto.Upvalues.Length];
+        }
     }
 
     /// <summary>
     /// 创建C#闭包
     /// </summary>
     /// <param name="csharpFunction"></param>
-    public LuaClosure(CsharpFunction csharpFunction)
+    public LuaClosure(CsharpFunction csharpFunction,int upvaluesCnt)
     {
         CSharpFunction = csharpFunction;
+        if(upvaluesCnt > 0)
+        {
+            Upvalues = new Upvalue[upvaluesCnt];
+        }
     }
 }

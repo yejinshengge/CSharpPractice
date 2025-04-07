@@ -1,5 +1,6 @@
 using System;
 using BinChunk;
+using CSharpToLua.API;
 using CSharpToLua.VirtualMachine;
 
 namespace CSharpToLua.State;
@@ -23,6 +24,12 @@ public partial class LuaState
         
         // 将闭包压入栈顶
         stack.Push(closure);
+
+        // Upvalue初始化
+        if(proto.Upvalues.Length > 0){
+            var env = Registry.Get(Consts.LUA_RIDX_GLOBALS);
+            closure.Upvalues[0] = new Upvalue{Value = env};
+        }
         
         // 返回成功状态码
         return 0;

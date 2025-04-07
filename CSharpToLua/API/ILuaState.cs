@@ -397,7 +397,27 @@ public interface ILuaState
     /// <param name="name"></param>
     /// <param name="func"></param>
     void Register(string name,CsharpFunction func);
+
+
+    /// <summary>
+    /// 将C#闭包压入栈顶
+    /// </summary>
+    /// <param name="func"></param>
+    /// <param name="n"></param>
+    void PushCSharpClosure(CsharpFunction func,int n);
     
+    /// <summary>
+    /// 获取Upvalue伪索引
+    /// </summary>
+    /// <param name="i"></param>
+    /// <returns></returns>
+    int LuaUpvalueIndex(int i);
+
+    /// <summary>
+    /// 闭合Upvalue
+    /// </summary>
+    /// <param name="n"></param>
+    void CloseUpvalues(int n);
 }
 
 /// <summary>

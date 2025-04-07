@@ -42,7 +42,7 @@ public static class InstMisc
         // 处理a参数（目前未实现相关功能）
         if (a != 0)
         {
-            throw new System.NotImplementedException("JMP指令的A参数功能未实现");
+            vm.CloseUpvalues(a);
         }
     }
 }

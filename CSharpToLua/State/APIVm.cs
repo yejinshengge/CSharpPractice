@@ -69,5 +69,42 @@ public partial class LuaState
         var proto = stack.Closure.Proto.Protos[idx];
         var closure = new LuaClosure(proto);
         stack.Push(closure);
+
+        for (int i = 0; i < proto.Upvalues.Length; i++)
+        {
+            var upValue = proto.Upvalues[i];
+            var index = upValue.Idx;
+            // 当前函数局部变量
+            if(upValue.Instack == 1){
+                if(stack.OpenUpvalues == null){
+                    stack.OpenUpvalues = new Dictionary<int,Upvalue>();
+                }
+                // 捕获的外围局部变量还在栈上
+                if(stack.OpenUpvalues.ContainsKey(index)){
+                    closure.Upvalues[i] = stack.OpenUpvalues[index];
+                }
+                else{
+                    closure.Upvalues[i] = new Upvalue{Value = stack.Slots[index]};
+                    stack.OpenUpvalues[index] = closure.Upvalues[i];
+                }
+            }
+            // 更外围函数局部变量
+            else{
+                closure.Upvalues[i] = stack.Closure.Upvalues[index];
+            }
+        }
+    }
+
+    public void CloseUpvalues(int n)
+    {
+        var openValues = stack.OpenUpvalues;
+        foreach(var (key,value) in openValues){
+            if(key >= n - 1)
+            {
+               var val = value.Value;
+               value.Value = val;
+               stack.OpenUpvalues.Remove(key);
+            }
+        }
     }
 }

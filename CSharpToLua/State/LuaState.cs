@@ -168,4 +168,9 @@ public partial class LuaState : ILuaState, ILuaVm
         stack.Prev = null;
     }
 
+    public int LuaUpvalueIndex(int i)
+    {
+        return Consts.LUA_REGISTRYINDEX - i;
+    }
+
 } 

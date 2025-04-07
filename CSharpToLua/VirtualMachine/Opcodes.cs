@@ -195,7 +195,7 @@ public readonly struct OpCodeInfo
             InstructionMode.IABC, "LOADNIL", InstLoad.LoadNil),
 
         // 获取上值：R(A) = UpValue[B]
-        [OpCode.OpGetUpval] = new OpCodeInfo(0, 1, OpArgType.OpArgU, OpArgType.OpArgN, InstructionMode.IABC, "GETUPVAL", null),
+        [OpCode.OpGetUpval] = new OpCodeInfo(0, 1, OpArgType.OpArgU, OpArgType.OpArgN, InstructionMode.IABC, "GETUPVAL", InstUpValue.GetUpVal),
 
         // 通过上值表获取值：R(A) = UpValue[B][RK(C)]
         [OpCode.OpGetTabup] = new OpCodeInfo(0, 1, OpArgType.OpArgU, OpArgType.OpArgK, InstructionMode.IABC, "GETTABUP", InstUpValue.GetTabUp),
@@ -204,10 +204,10 @@ public readonly struct OpCodeInfo
         [OpCode.OpGetTable] = new OpCodeInfo(0, 1, OpArgType.OpArgR, OpArgType.OpArgK, InstructionMode.IABC, "GETTABLE", InstTable.GetTable),
 
         // 设置上值表：UpValue[A][RK(B)] = RK(C)
-        [OpCode.OpSetTabup] = new OpCodeInfo(0, 0, OpArgType.OpArgK, OpArgType.OpArgK, InstructionMode.IABC, "SETTABUP", null),
+        [OpCode.OpSetTabup] = new OpCodeInfo(0, 0, OpArgType.OpArgK, OpArgType.OpArgK, InstructionMode.IABC, "SETTABUP", InstUpValue.SetTabUp),
 
         // 设置上值：UpValue[B] = R(A)
-        [OpCode.OpSetUpval] = new OpCodeInfo(0, 0, OpArgType.OpArgU, OpArgType.OpArgN, InstructionMode.IABC, "SETUPVAL", null),
+        [OpCode.OpSetUpval] = new OpCodeInfo(0, 0, OpArgType.OpArgU, OpArgType.OpArgN, InstructionMode.IABC, "SETUPVAL", InstUpValue.SetUpVal),
 
         // 设置表值：R(A)[RK(B)] = RK(C)
         [OpCode.OpSetTable] = new OpCodeInfo(0, 0, OpArgType.OpArgK, OpArgType.OpArgK, InstructionMode.IABC, "SETTABLE", InstTable.SetTable),

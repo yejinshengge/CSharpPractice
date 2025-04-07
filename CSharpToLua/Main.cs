@@ -4,6 +4,7 @@ using BinChunk;
 using CSharpToLua.API;
 using CSharpToLua.State;
 using CSharpToLua.VirtualMachine;
+using Upvalue = BinChunk.Upvalue;
 
 namespace CSharpToLua;
 
@@ -11,7 +12,7 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        string url = "D:\\CSharpPractice\\CSharpToLua\\LuaSource\\bin\\helloworld.out";
+        string url = "D:\\CSharpPractice\\CSharpToLua\\LuaSource\\bin\\upvaluetest.out";
         // 读取文件内容
         byte[] data = File.ReadAllBytes(url);
         LuaState ls = new LuaState(20);
