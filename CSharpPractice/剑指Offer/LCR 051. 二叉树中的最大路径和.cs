@@ -27,6 +27,7 @@ public class LeetCode_LCR051
         int right = Math.Max(MaxGain(root.right), 0);
         // 以当前节点为拐点的最长路径
         _maxSum = Math.Max(_maxSum, left + right + root.val);
+        // 以当前节点为根节点的最长路径
         return Math.Max(left, right) + root.val;
     }
 }

@@ -16,7 +16,7 @@ public class LeetCode_LCR053
         Stack<TreeNode> stack = new();
         TreeNode cur = root;
         TreeNode pre = null;
-
+        // 中序遍历
         while (cur != null || stack.Count > 0)
         {
             if (cur != null)
@@ -41,6 +41,7 @@ public class LeetCode_LCR053
     {
         TreeNode cur = root;
         TreeNode res = null;
+        // 根据二叉搜索树性质，找到第一个大于p的节点
         while (cur != null)
         {
             if (cur.val <= p.val)

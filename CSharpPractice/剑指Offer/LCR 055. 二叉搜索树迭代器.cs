@@ -29,6 +29,7 @@ public class LeetCode_LCR055
                 else
                 {
                     cur = stack.Pop();
+                    // 中序遍历加入小根堆
                     _heapInsert(cur.val);
                     cur = cur.right;
                 }
@@ -92,6 +93,7 @@ public class LeetCode_LCR055
         }
     
         public int Next() {
+            // 中序遍历中的一次循环
             while (_cur != null)
             {
                 _stack.Push(_cur);

@@ -33,9 +33,12 @@ public class LeetCode_LCR057
         int buketSize = t + 1;
         for (int i = 0; i < nums.Length; i++)
         {
+            // 映射到桶
             var id = _getId(nums[i], buketSize);
+            // 检查当前的桶
             if (dic.ContainsKey(id))
                 return true;
+            // 检查相邻的桶
             if (dic.ContainsKey(id - 1) && nums[i] - dic[id - 1] <= t)
                 return true;
             if (dic.ContainsKey(id + 1) && dic[id + 1] - nums[i] <= t)
