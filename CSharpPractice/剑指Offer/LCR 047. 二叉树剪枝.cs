@@ -19,6 +19,7 @@ public class LeetCode_LCR047
     private bool _pruneTree(TreeNode node)
     {
         if (node == null) return true;
+        // 后序遍历
         var pruneLeft = _pruneTree(node.left);
         var pruneRight = _pruneTree(node.right);
         if (pruneLeft)

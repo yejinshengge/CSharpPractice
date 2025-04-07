@@ -17,7 +17,7 @@ public class LeetCode_LCR056
         HashSet<int> dic = new();
         Stack<TreeNode> stack = new();
         TreeNode cur = root;
-
+        // 中序遍历+哈希表寻找目标值
         while (cur != null || stack.Count > 0)
         {
             if (cur != null)
@@ -40,9 +40,10 @@ public class LeetCode_LCR056
 
     public bool FindTarget(TreeNode root, int k)
     {
+        // 正反迭代器
         BSTIterator it = new BSTIterator(root, false);
         BSTIterator preIt = new BSTIterator(root, true);
-
+        // 双指针
         var next = it.Next();
         var pre = preIt.Next();
         while (pre != next)
@@ -65,6 +66,7 @@ public class LeetCode_LCR056
     {
         private TreeNode _cur;
         private Stack<TreeNode> _stack;
+        // 是否反向
         private bool _reverse;
         public BSTIterator(TreeNode root,bool reverse)
         {
