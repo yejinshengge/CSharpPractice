@@ -52,3 +52,24 @@ namespace CSharpToLua.API;
         LUA_OPLE = 2      // <=小于等于
     }
 
+    public static class Consts
+    {
+        /// <summary>
+        /// 默认栈大小
+        /// </summary>
+        public const int LUA_MINSTACK = 20;
+        /// <summary>
+        /// Lua栈的最大索引(正负)
+        /// </summary>
+        public const int LUAI_MAXSTACK = 1000000;
+        /// <summary>
+        /// 注册表的伪索引
+        /// </summary>
+        public const int LUA_REGISTRYINDEX = -LUAI_MAXSTACK -1000;
+        /// <summary>
+        /// 全局环境在注册表里的索引
+        /// </summary>
+        public const long LUA_RIDX_GLOBALS = 2;
+
+    }
+

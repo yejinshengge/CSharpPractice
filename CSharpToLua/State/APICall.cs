@@ -43,10 +43,15 @@ public partial class LuaState
         if (val is LuaClosure closure)
         {
             // 输出调试信息
-            Console.WriteLine($"call {closure.Proto.Source}<{closure.Proto.LineDefined}, {closure.Proto.LastLineDefined}>");
+            //Console.WriteLine($"call {closure.Proto.Source}<{closure.Proto.LineDefined}, {closure.Proto.LastLineDefined}>");
             
-            // 调用Lua闭包
-            CallLuaClosure(nArgs, nResults, closure);
+            if(closure.Proto != null)
+                // 调用Lua闭包
+                _callLuaClosure(nArgs, nResults, closure);
+            else
+                // 调用C#闭包
+                _callCSharpClosure(nArgs, nResults, closure);
+
         }
         else
         {
@@ -60,7 +65,7 @@ public partial class LuaState
     /// <param name="nArgs">参数数量</param>
     /// <param name="nResults">期望的返回值数量</param>
     /// <param name="closure">要执行的闭包</param>
-    private void CallLuaClosure(int nArgs, int nResults, LuaClosure closure)
+    private void _callLuaClosure(int nArgs, int nResults, LuaClosure closure)
     {
         // 获取函数原型信息
         int nRegs = closure.Proto.MaxStackSize;
@@ -68,7 +73,7 @@ public partial class LuaState
         bool isVararg = closure.Proto.IsVararg == 1;
         
         // 创建新的调用帧
-        LuaStack newStack = new LuaStack(nRegs + 20);
+        LuaStack newStack = new LuaStack(nRegs + 20,this);
         newStack.Closure = closure;
         
         // 处理函数参数
@@ -96,6 +101,35 @@ public partial class LuaState
         if (nResults != 0)
         {
             var results = newStack.PopN(newStack.Top - nRegs);
+            stack.Check(results.Length);
+            stack.PushN(results, nResults);
+        }
+    }
+
+    /// <summary>
+    /// 执行C#闭包
+    /// </summary>
+    /// <param name="nArgs">参数数量</param>
+    /// <param name="nResults">期望的返回值数量</param>
+    /// <param name="closure">要执行的闭包</param>
+    private void _callCSharpClosure(int nArgs, int nResults, LuaClosure closure)
+    {
+        var newStack = new LuaStack(nArgs+20,this);
+        newStack.Closure = closure;
+
+        // 处理函数参数
+        var args = stack.PopN(nArgs);
+        newStack.PushN(args, nArgs);
+        stack.Pop();
+
+        PushLuaStack(newStack);
+        int r = closure.CSharpFunction(this);
+        PopLuaStack();
+
+        // 处理返回值
+        if(nResults != 0)
+        {
+            var results = newStack.PopN(r);
             stack.Check(results.Length);
             stack.PushN(results, nResults);
         }

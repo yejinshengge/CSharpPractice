@@ -1,4 +1,5 @@
 using BinChunk;
+using CSharpToLua.API;
 
 namespace CSharpToLua.State;
 
@@ -14,11 +15,25 @@ public class LuaClosure
     public Prototype Proto { get; set; }
 
     /// <summary>
+    /// C#闭包
+    /// </summary>
+    public CsharpFunction CSharpFunction { get; set; }
+
+    /// <summary>
     /// 创建Lua闭包
     /// </summary>
     /// <param name="proto">函数原型</param>
     public LuaClosure(Prototype proto)
     {
         Proto = proto;
+    }
+
+    /// <summary>
+    /// 创建C#闭包
+    /// </summary>
+    /// <param name="csharpFunction"></param>
+    public LuaClosure(CsharpFunction csharpFunction)
+    {
+        CSharpFunction = csharpFunction;
     }
 }

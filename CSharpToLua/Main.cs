@@ -11,11 +11,12 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        string url = "D:\\CSharpPractice\\CSharpToLua\\LuaSource\\bin\\functioncall.out";
+        string url = "D:\\CSharpPractice\\CSharpToLua\\LuaSource\\bin\\helloworld.out";
         // 读取文件内容
         byte[] data = File.ReadAllBytes(url);
         LuaState ls = new LuaState(20);
-        ls.Load(data, url, "b");
+        ls.Register("print",Print);
+        ls.Load(data, "chunk", "b");
         ls.Call(0, 0);
 
         // // 解析Lua字节码
@@ -336,4 +337,28 @@ public class Program
         return "-";
     }
 
+    private static int Print(ILuaState state)
+    {
+        var nArgs = state.GetTop();
+        for(int i = 1;i<=nArgs;i++)
+        {
+            if(state.IsBoolean(i))
+            {
+                Console.Write(state.ToBoolean(i));
+            }
+            else if(state.IsString(i))
+            {
+                Console.Write(state.ToString(i));
+            }
+            else{
+                Console.Write(state.TypeName(state.Type(i)));
+            }
+            if(i<nArgs)
+            {
+                Console.Write("\t");
+            }
+        }
+        Console.WriteLine();
+        return 0;
+    }
 }

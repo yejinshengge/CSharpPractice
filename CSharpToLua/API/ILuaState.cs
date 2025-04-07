@@ -352,4 +352,57 @@ public interface ILuaState
     /// 调用后，原函数和参数被弹出，返回值按正序入栈（第一个返回值最先入栈）
     /// </remarks>
     void Call(int nArgs, int nResults);
+
+    /// <summary>
+    /// 将C#函数压入栈顶
+    /// </summary>
+    /// <param name="func">C#函数</param>
+    void PushCSharpFunction(CsharpFunction func);
+
+    /// <summary>
+    /// 检查指定索引处的值是否是C#函数
+    /// </summary>
+    /// <param name="idx">索引</param>
+    /// <returns>如果是C#函数则返回true</returns>
+    bool IsCsharpFunction(int idx);
+    
+    /// <summary>
+    /// 将指定索引处的值转换为C#函数
+    /// </summary>
+    /// <param name="idx">索引</param>
+    /// <returns>C#函数</returns>
+    CsharpFunction ToCsharpFunction(int idx);
+
+    /// <summary>
+    /// 全局环境推入栈顶
+    /// </summary>
+    void PushGlobalTable();
+
+    /// <summary>
+    /// 获取全局变量
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    LuaType GetGlobal(string name);
+
+    /// <summary>
+    /// 设置全局变量
+    /// </summary>
+    /// <param name="name"></param>
+    void SetGlobal(string name);
+
+    /// <summary>
+    /// 注册C#函数
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="func"></param>
+    void Register(string name,CsharpFunction func);
+    
 }
+
+/// <summary>
+/// CSharp函数调用
+/// </summary>
+/// <param name="luaState"></param>
+/// <returns></returns>
+public delegate int CsharpFunction(ILuaState luaState);

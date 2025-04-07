@@ -1,9 +1,9 @@
+using CSharpToLua.API;
+
 namespace CSharpToLua.State;
 
 public partial class LuaState
 {
-    
-    #region 压栈操作
     public void PushNil()
     {
         stack.Push(null);
@@ -29,7 +29,14 @@ public partial class LuaState
         stack.Push(s);
     }
 
-    
+    public void PushCSharpFunction(CsharpFunction func)
+    {
+        stack.Push(new LuaClosure(func));
+    }
 
-    #endregion
+    public void PushGlobalTable()
+    {
+        var global = Registry.Get(Consts.LUA_RIDX_GLOBALS);
+        stack.Push(global);
+    }
 }

@@ -8,7 +8,12 @@ namespace CSharpToLua.State;
 /// </summary>
 public partial class LuaState : ILuaState, ILuaVm
 {
+    // 栈
     private LuaStack stack;
+
+    // 注册表
+    public LuaTable Registry;
+
 
     /// <summary>
     /// 创建带有函数原型的Lua状态机实例
@@ -17,8 +22,10 @@ public partial class LuaState : ILuaState, ILuaVm
     /// <param name="proto">要执行的函数原型</param>
     public LuaState(int stackSize)
     {
-        this.stack = new LuaStack(stackSize);
-
+        stack = new LuaStack(stackSize,this);
+        Registry = new LuaTable();
+        Registry.Put(Consts.LUA_RIDX_GLOBALS,new LuaTable());
+        PushLuaStack(new LuaStack(stackSize,this));
     }
 
     /// <summary>
@@ -26,11 +33,10 @@ public partial class LuaState : ILuaState, ILuaVm
     /// </summary>
     public LuaState()
     {
-        this.stack = new LuaStack(20);
+        new LuaState(Consts.LUA_MINSTACK);
     }
 
 
-    #region 基础栈操作
     public int GetTop()
     {
         return stack.Top;
@@ -124,7 +130,7 @@ public partial class LuaState : ILuaState, ILuaVm
             }
         }
     }
-    #endregion
+
 
     /// <summary>
     /// 压入新的Lua栈帧

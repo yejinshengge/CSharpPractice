@@ -109,7 +109,7 @@ public readonly struct Instruction
 
         // 获取指令参数并格式化为日志字符串
         string paramsStr = FormatInstructionParams(opCode, info.OpMode);
-        
+        Console.WriteLine("____________________________________________");
         Console.WriteLine($"执行指令: {info.Name} {paramsStr}");
         
         // 执行指令对应的操作
@@ -125,6 +125,7 @@ public readonly struct Instruction
         {
             throw new NotImplementedException($"未实现的操作码: {opCode} ({info.Name})");
         }
+        Console.WriteLine("____________________________________________");
     }
 
     /// <summary>

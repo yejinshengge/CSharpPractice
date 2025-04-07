@@ -77,4 +77,15 @@ public partial class LuaState
         return _getTableInternal(v,key);
     }
 
+    /// <summary>
+    /// 获取全局环境中的变量
+    /// </summary>
+    /// <param name="name">变量名</param>
+    /// <returns>变量的类型</returns>
+    public LuaType GetGlobal(string name)
+    {
+        var table = Registry.Get(Consts.LUA_RIDX_GLOBALS);
+        return _getTableInternal(table,name);
+    }
+    
 }

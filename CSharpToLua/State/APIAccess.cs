@@ -4,7 +4,6 @@ namespace CSharpToLua.State;
 
 public partial class LuaState
 {
-    #region 类型检查与转换
     public string TypeName(LuaType tp)
     {
         switch (tp)
@@ -126,6 +125,24 @@ public partial class LuaState
         var (s, _) = ToStringX(idx);
         return s;
     }
-    #endregion
 
+    public bool IsCsharpFunction(int idx)
+    {
+        var val = stack.Get(idx);
+        if (val is not LuaClosure closure)
+        {
+            return false;
+        }
+        return closure.CSharpFunction != null;
+    }
+
+    public CsharpFunction ToCsharpFunction(int idx)
+    {
+        var val = stack.Get(idx);
+        if (val is LuaClosure closure)
+        {
+            return closure.CSharpFunction;
+        }
+        return null;
+    }
 }

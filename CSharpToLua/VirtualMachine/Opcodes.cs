@@ -198,7 +198,7 @@ public readonly struct OpCodeInfo
         [OpCode.OpGetUpval] = new OpCodeInfo(0, 1, OpArgType.OpArgU, OpArgType.OpArgN, InstructionMode.IABC, "GETUPVAL", null),
 
         // 通过上值表获取值：R(A) = UpValue[B][RK(C)]
-        [OpCode.OpGetTabup] = new OpCodeInfo(0, 1, OpArgType.OpArgU, OpArgType.OpArgK, InstructionMode.IABC, "GETTABUP", null),
+        [OpCode.OpGetTabup] = new OpCodeInfo(0, 1, OpArgType.OpArgU, OpArgType.OpArgK, InstructionMode.IABC, "GETTABUP", InstUpValue.GetTabUp),
 
         // 从表中获取值：R(A) = R(B)[RK(C)]
         [OpCode.OpGetTable] = new OpCodeInfo(0, 1, OpArgType.OpArgR, OpArgType.OpArgK, InstructionMode.IABC, "GETTABLE", InstTable.GetTable),

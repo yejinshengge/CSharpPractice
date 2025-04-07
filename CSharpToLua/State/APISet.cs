@@ -33,6 +33,15 @@ public partial class LuaState
         stack.Set(idx, table);
     }
 
+    private void _setTableInternal(object table, object key, object value)
+    {
+        if(table is not LuaTable luaTable)
+        {
+            throw new InvalidOperationException("操作对象不是表类型");
+        }
+        luaTable.Put(key, value);
+    }
+
     /// <summary>
     /// 通过字符串键设置表值
     /// </summary>
@@ -53,5 +62,18 @@ public partial class LuaState
     {
         var value = stack.Pop();
         _setTableInternal(idx, key, value);
+    }
+
+    public void SetGlobal(string name)
+    {
+        var table = Registry.Get(Consts.LUA_RIDX_GLOBALS);
+        var value = stack.Pop();
+        _setTableInternal(table,name,value);
+    }
+
+    public void Register(string name,CsharpFunction func)
+    {
+        PushCSharpFunction(func);
+        SetGlobal(name);
     }
 }

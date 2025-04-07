@@ -1,6 +1,7 @@
 namespace CSharpToLua.State;
 
 using System.Collections.Generic;
+using CSharpToLua.API;
 
 /// <summary>
 /// Lua虚拟栈实现
@@ -36,10 +37,12 @@ public class LuaStack
     /// </summary>
     public int PC { get; set; }
 
+    private LuaState luaState;
+
     /// <summary>
     /// 初始化指定容量的栈
     /// </summary>
-    public LuaStack(int size)
+    public LuaStack(int size,LuaState state)
     {
         // 预填充null元素模拟Lua栈初始状态
         for (int i = 0; i < size; i++)
@@ -53,6 +56,7 @@ public class LuaStack
         Closure = null;
         VarArgs = new List<object>();
         PC = 0;
+        luaState = state;
     }
 
     /// <summary>
@@ -101,6 +105,8 @@ public class LuaStack
     /// </summary>
     public int AbsIndex(int idx)
     {
+        if(idx <= Consts.LUA_REGISTRYINDEX)
+            return idx;
         return idx > 0 ? idx : idx + Top + 1;
     }
 
@@ -109,6 +115,8 @@ public class LuaStack
     /// </summary>
     public bool IsValid(int idx)
     {
+        if(idx == Consts.LUA_REGISTRYINDEX)
+            return true;
         int absIdx = AbsIndex(idx);
         return absIdx > 0 && absIdx <= Top;
     }
@@ -118,6 +126,8 @@ public class LuaStack
     /// </summary>
     public object Get(int idx)
     {
+        if(idx == Consts.LUA_REGISTRYINDEX)
+            return luaState.Registry;
         int absIdx = AbsIndex(idx);
         return absIdx > 0 && absIdx <= Top ? slots[absIdx - 1] : null;
     }
@@ -127,6 +137,11 @@ public class LuaStack
     /// </summary>
     public void Set(int idx, object val)
     {
+        if(idx == Consts.LUA_REGISTRYINDEX)
+        {
+            luaState.Registry = val as LuaTable;
+            return;
+        }
         int absIdx = AbsIndex(idx);
         if (absIdx > 0 && absIdx <= Top)
         {
