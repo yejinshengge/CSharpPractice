@@ -12,7 +12,7 @@ public partial class LuaState
     public void CreateTable(int arraySize, int recordSize)
     {
         var table = new LuaTable(arraySize, recordSize);
-        stack.Push(table);
+        Stack.Push(table);
     }
 
     /// <summary>
@@ -28,17 +28,37 @@ public partial class LuaState
     /// </summary>
     /// <param name="tableObj">表对象</param>
     /// <param name="key">查询键</param>
+    /// <param name="isRaw">是否为原始表</param>
     /// <returns>值的Lua类型</returns>
-    private LuaType _getTableInternal(object tableObj, object key)
+    private LuaType _getTableInternal(object tableObj, object key,bool isRaw)
     {
-        if (tableObj is not LuaTable table)
+        if (tableObj is LuaTable table)
         {
-            throw new InvalidOperationException("操作对象不是表类型");
+            var value = table.Get(key);
+            if(isRaw || value != null || !table.HasMetafield("__index")){
+                Stack.Push(value);
+                return LuaValue.TypeOf(value);
+            }
         }
 
-        var value = table.Get(key);
-        stack.Push(value);
-        return LuaValue.TypeOf(value);
+        // 调用元方法
+        if(!isRaw){
+            var mf = LuaValue.GetMetafield(tableObj,"__index",this);
+            if(mf != null){
+                switch(mf){
+                    case LuaTable mTable:
+                        return _getTableInternal(mTable,key,false);
+                    case LuaClosure closure:
+                        Stack.Push(mf);
+                        Stack.Push(tableObj);
+                        Stack.Push(key);
+                        Call(2,1);
+                        var val = Stack.Get(-1);
+                        return LuaValue.TypeOf(val);
+                }
+            }
+        }
+        throw new InvalidOperationException("无法获取表值");
     }
 
     /// <summary>
@@ -48,9 +68,9 @@ public partial class LuaState
     /// <returns>获取值的类型</returns>
     public LuaType GetTable(int idx)
     {
-        var table = stack.Get(idx);
-        var key = stack.Pop();
-        return _getTableInternal(table, key);
+        var table = Stack.Get(idx);
+        var key = Stack.Pop();
+        return _getTableInternal(table, key,false);
     }
 
     /// <summary>
@@ -61,8 +81,8 @@ public partial class LuaState
     /// <returns>获取值的类型</returns>
     public LuaType GetField(int idx, string key)
     {
-        object v = stack.Get(idx);
-        return _getTableInternal(v,key);
+        object v = Stack.Get(idx);
+        return _getTableInternal(v,key,false);
     }
 
     /// <summary>
@@ -73,8 +93,8 @@ public partial class LuaState
     /// <returns>获取值的类型</returns>
     public LuaType GetI(int idx, long key)
     {
-        object v = stack.Get(idx);
-        return _getTableInternal(v,key);
+        object v = Stack.Get(idx);
+        return _getTableInternal(v,key,false);
     }
 
     /// <summary>
@@ -85,7 +105,23 @@ public partial class LuaState
     public LuaType GetGlobal(string name)
     {
         var table = Registry.Get(Consts.LUA_RIDX_GLOBALS);
-        return _getTableInternal(table,name);
+        return _getTableInternal(table,name,false);
+    }
+    
+    /// <summary>
+    /// 获取元表
+    /// </summary>
+    /// <param name="idx"></param>
+    /// <returns></returns>
+    public bool GetMetaTable(int idx)
+    {
+        var val = Stack.Get(idx);
+        var mt = LuaValue.GetMetatable(val,this);
+        if(mt != null){
+            Stack.Push(mt);
+            return true;
+        }
+        return false;
     }
     
 }

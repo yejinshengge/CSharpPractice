@@ -22,9 +22,9 @@ public partial class LuaState
 
     public LuaType Type(int idx)
     {
-        if (stack.IsValid(idx))
+        if (Stack.IsValid(idx))
         {
-            var val = stack.Get(idx);
+            var val = Stack.Get(idx);
             return LuaValue.TypeOf(val);
         }
         return LuaType.LUA_TNONE;
@@ -64,13 +64,13 @@ public partial class LuaState
 
     public bool IsInteger(int idx)
     {
-        var val = stack.Get(idx);
+        var val = Stack.Get(idx);
         return val is long;
     }
 
     public bool ToBoolean(int idx)
     {
-        var val = stack.Get(idx);
+        var val = Stack.Get(idx);
         return LuaValue.ToBoolean(val);
     }
 
@@ -82,7 +82,7 @@ public partial class LuaState
 
     public (double, bool) ToNumberX(int idx)
     {
-        var val = stack.Get(idx);
+        var val = Stack.Get(idx);
         return LuaValue.ToFloat(val);
     }
 
@@ -94,13 +94,13 @@ public partial class LuaState
 
     public (long, bool) ToIntegerX(int idx)
     {
-        var val = stack.Get(idx);
+        var val = Stack.Get(idx);
         return LuaValue.ToInteger(val);
     }
 
     public (string, bool) ToStringX(int idx)
     {
-        var val = stack.Get(idx);
+        var val = Stack.Get(idx);
         if (val is string s)
         {
             return (s, true);
@@ -108,13 +108,13 @@ public partial class LuaState
         else if (val is long l)
         {
             var str = l.ToString();
-            stack.Set(idx, str); // 注意：这里会修改栈上的值
+            Stack.Set(idx, str); // 注意：这里会修改栈上的值
             return (str, true);
         }
         else if (val is double d)
         {
             var str = d.ToString();
-            stack.Set(idx, str); // 注意：这里会修改栈上的值
+            Stack.Set(idx, str); // 注意：这里会修改栈上的值
             return (str, true);
         }
         return ("", false);
@@ -128,7 +128,7 @@ public partial class LuaState
 
     public bool IsCsharpFunction(int idx)
     {
-        var val = stack.Get(idx);
+        var val = Stack.Get(idx);
         if (val is not LuaClosure closure)
         {
             return false;
@@ -138,7 +138,7 @@ public partial class LuaState
 
     public CsharpFunction ToCsharpFunction(int idx)
     {
-        var val = stack.Get(idx);
+        var val = Stack.Get(idx);
         if (val is LuaClosure closure)
         {
             return closure.CSharpFunction;

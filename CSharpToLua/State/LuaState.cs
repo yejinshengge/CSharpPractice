@@ -9,7 +9,7 @@ namespace CSharpToLua.State;
 public partial class LuaState : ILuaState, ILuaVm
 {
     // 栈
-    private LuaStack stack;
+    public LuaStack Stack;
 
     // 注册表
     public LuaTable Registry;
@@ -22,7 +22,7 @@ public partial class LuaState : ILuaState, ILuaVm
     /// <param name="proto">要执行的函数原型</param>
     public LuaState(int stackSize)
     {
-        stack = new LuaStack(stackSize,this);
+        Stack = new LuaStack(stackSize,this);
         Registry = new LuaTable();
         Registry.Put(Consts.LUA_RIDX_GLOBALS,new LuaTable());
         PushLuaStack(new LuaStack(stackSize,this));
@@ -39,17 +39,17 @@ public partial class LuaState : ILuaState, ILuaVm
 
     public int GetTop()
     {
-        return stack.Top;
+        return Stack.Top;
     }
 
     public int AbsIndex(int idx)
     {
-        return stack.AbsIndex(idx);
+        return Stack.AbsIndex(idx);
     }
 
     public void CheckStack(int n)
     {
-        stack.Check(n);
+        Stack.Check(n);
     }
 
     public void Pop(int n)
@@ -59,20 +59,20 @@ public partial class LuaState : ILuaState, ILuaVm
 
     public void Copy(int fromIdx, int toIdx)
     {
-        var val = stack.Get(fromIdx);
-        stack.Set(toIdx, val);
+        var val = Stack.Get(fromIdx);
+        Stack.Set(toIdx, val);
     }
 
     public void PushValue(int idx)
     {
-        var val = stack.Get(idx);
-        stack.Push(val);
+        var val = Stack.Get(idx);
+        Stack.Push(val);
     }
 
     public void Replace(int idx)
     {
-        var val = stack.Pop();
-        stack.Set(idx, val);
+        var val = Stack.Pop();
+        Stack.Set(idx, val);
     }
 
     public void Insert(int idx)
@@ -88,8 +88,8 @@ public partial class LuaState : ILuaState, ILuaVm
 
     public void Rotate(int idx, int n)
     {
-        int t = stack.Top - 1;
-        int p = stack.AbsIndex(idx) - 1;
+        int t = Stack.Top - 1;
+        int p = Stack.AbsIndex(idx) - 1;
         int m;
         
         if (n >= 0)
@@ -101,32 +101,32 @@ public partial class LuaState : ILuaState, ILuaVm
             m = p - n - 1;
         }
         
-        stack.Reverse(p, m);
-        stack.Reverse(m + 1, t);
-        stack.Reverse(p, t);
+        Stack.Reverse(p, m);
+        Stack.Reverse(m + 1, t);
+        Stack.Reverse(p, t);
     }
 
     public void SetTop(int idx)
     {
-        int newTop = stack.AbsIndex(idx);
+        int newTop = Stack.AbsIndex(idx);
         if (newTop < 0)
         {
             throw new Exception("栈下溢！");
         }
         
-        int n = stack.Top - newTop;
+        int n = Stack.Top - newTop;
         if (n > 0)
         {
             for (int i = 0; i < n; i++)
             {
-                stack.Pop();
+                Stack.Pop();
             }
         }
         else if (n < 0)
         {
             for (int i = 0; i > n; i--)
             {
-                stack.Push(null);
+                Stack.Push(null);
             }
         }
     }
@@ -143,10 +143,10 @@ public partial class LuaState : ILuaState, ILuaVm
     public void PushLuaStack(LuaStack newStack)
     {
         // 新栈的prev指向当前栈
-        newStack.Prev = this.stack;
+        newStack.Prev = this.Stack;
         
         // 更新当前栈为新栈
-        this.stack = newStack;
+        this.Stack = newStack;
     }
 
     /// <summary>
@@ -159,10 +159,10 @@ public partial class LuaState : ILuaState, ILuaVm
     public void PopLuaStack()
     {
         // 保存当前栈引用
-        LuaStack stack = this.stack;
+        LuaStack stack = this.Stack;
         
         // 恢复前一个栈为当前栈
-        this.stack = stack.Prev;
+        this.Stack = stack.Prev;
         
         // 断开链接，帮助垃圾回收
         stack.Prev = null;

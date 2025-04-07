@@ -418,6 +418,57 @@ public interface ILuaState
     /// </summary>
     /// <param name="n"></param>
     void CloseUpvalues(int n);
+
+    /// <summary>
+    /// 获取元表
+    /// </summary>
+    /// <param name="idx"></param>
+    /// <returns></returns>
+    bool GetMetaTable(int idx);
+
+    /// <summary>
+    /// 设置元表
+    /// </summary>
+    /// <param name="idx"></param>
+    void SetMetatable(int idx);
+
+    /// <summary>
+    /// 获取长度(不考虑元表)
+    /// </summary>
+    /// <param name="idx"></param>
+    /// <returns></returns>
+    uint RawLen(int idx);
+    /// <summary>
+    /// 比较两个值(不考虑元表)
+    /// </summary>
+    /// <param name="idx1"></param>
+    /// <param name="idx2"></param>
+    /// <returns></returns>
+    bool RawEqual(int idx1, int idx2);
+    /// <summary>
+    /// 获取值(不考虑元表)
+    /// </summary>
+    /// <param name="idx"></param>
+    /// <returns></returns>
+    LuaType RawGet(int idx);
+    /// <summary>
+    /// 设置值(不考虑元表)
+    /// </summary>
+    /// <param name="idx"></param>
+    void RawSet(int idx);
+    /// <summary>
+    /// 获取索引处的值(不考虑元表)
+    /// </summary>
+    /// <param name="idx"></param>
+    /// <param name="i"></param>
+    /// <returns></returns>
+    LuaType RawGetI(int idx, long i);
+    /// <summary>
+    /// 设置索引处的值(不考虑元表)
+    /// </summary>
+    /// <param name="idx"></param>
+    /// <param name="i"></param>
+    void RawSetI(int idx, long i);
 }
 
 /// <summary>

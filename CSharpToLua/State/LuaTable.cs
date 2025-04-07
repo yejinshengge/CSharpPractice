@@ -17,6 +17,14 @@ public class LuaTable
     // 哈希表部分，用于存储非连续键值对
     private Dictionary<object, object> _map;
 
+    // 元表
+    public LuaTable Metatable;
+
+    /// <summary>
+    /// 获取数组部分的逻辑长度（忽略末尾的null）
+    /// </summary>
+    public int Length => _arr?.Count ?? 0;
+
     /// <summary>
     /// 构造函数，创建Lua表
     /// </summary>
@@ -204,8 +212,15 @@ public class LuaTable
     }
 
     /// <summary>
-    /// 获取数组部分的逻辑长度（忽略末尾的null）
+    /// 检查表是否具有指定元方法
     /// </summary>
-    public int Length => _arr?.Count ?? 0;
+    /// <param name="fieldName">元方法名称</param>
+    /// <returns>
+    /// 如果表具有指定元方法，返回true；否则返回false
+    /// </returns>
+    public bool HasMetafield(string fieldName)
+    {
+        return Metatable != null && Metatable.Get(fieldName) != null;
+    }
 }
 

@@ -6,26 +6,33 @@ namespace CSharpToLua.State
     {
         public void Len(int idx)
         {
-            object val = stack.Get(idx);
+            object val = Stack.Get(idx);
             if (val is string s)
             {
-                stack.Push((long)s.Length);
+                Stack.Push((long)s.Length);
+                return;
             }
-            else if(val is LuaTable t)
+            else{
+                var (res,ok) = LuaValue.CallMetamethod(val,val,"__len",this);
+                if(ok){
+                    Stack.Push(res);
+                    return;
+                }
+            }
+            if(val is LuaTable t)
             {
-                stack.Push((long)t.Length);
+                Stack.Push((long)t.Length);
+                return;
             }
-            else
-            {
-                throw new System.Exception("长度错误：仅支持字符串类型");
-            }
+            throw new System.Exception("长度错误：仅支持字符串类型");
+            
         }
 
         public void Concat(int n)
         {
             if (n == 0)
             {
-                stack.Push("");
+                Stack.Push("");
             }
             else if (n >= 2)
             {
@@ -35,14 +42,20 @@ namespace CSharpToLua.State
                     {
                         string s2 = ToString(-1);
                         string s1 = ToString(-2);
-                        stack.Pop();
-                        stack.Pop();
-                        stack.Push(s1 + s2);
+                        Stack.Pop();
+                        Stack.Pop();
+                        Stack.Push(s1 + s2);
+                        continue;
                     }
-                    else
-                    {
-                        throw new System.Exception("连接错误：需要两个字符串");
+                    // 调用元方法
+                    var a = Stack.Pop();
+                    var b = Stack.Pop();
+                    var (res,ok) = LuaValue.CallMetamethod(a,b,"__concat",this);
+                    if(ok){
+                        Stack.Push(res);
+                        continue;
                     }
+                    throw new System.Exception("连接错误：需要两个字符串");
                 }
             }
             // n == 1时不执行任何操作

@@ -2,24 +2,24 @@ namespace CSharpToLua.State;
 
 public partial class LuaState
 {
-    public int PC => stack.PC;
+    public int PC => Stack.PC;
 
     public void AddPC(int n)
     {
-        stack.PC += n;
+        Stack.PC += n;
     }
 
     public uint Fetch()
     {
-        uint code = stack.Closure.Proto.Code[stack.PC];
-        stack.PC++;
+        uint code = Stack.Closure.Proto.Code[Stack.PC];
+        Stack.PC++;
         return code;
     }
 
     public void GetConst(int idx)
     {
-        object constant = stack.Closure.Proto.Constants[idx];
-        stack.Push(constant);
+        object constant = Stack.Closure.Proto.Constants[idx];
+        Stack.Push(constant);
     }
 
     public void GetRK(int rk)
@@ -42,7 +42,7 @@ public partial class LuaState
     /// <returns>寄存器数量</returns>
     public int RegisterCount()
     {
-        return stack.Closure.Proto.MaxStackSize;
+        return Stack.Closure.Proto.MaxStackSize;
     }
 
     /// <summary>
@@ -53,11 +53,11 @@ public partial class LuaState
     {
         if (n < 0)
         {
-            n = stack.VarArgs.Count;
+            n = Stack.VarArgs.Count;
         }
         
-        stack.Check(n);
-        stack.PushN(stack.VarArgs.ToArray(), n);
+        Stack.Check(n);
+        Stack.PushN(Stack.VarArgs.ToArray(), n);
     }
 
     /// <summary>
@@ -66,9 +66,9 @@ public partial class LuaState
     /// <param name="idx">函数原型在当前Proto的子函数表中的索引</param>
     public void LoadProto(int idx)
     {
-        var proto = stack.Closure.Proto.Protos[idx];
+        var proto = Stack.Closure.Proto.Protos[idx];
         var closure = new LuaClosure(proto);
-        stack.Push(closure);
+        Stack.Push(closure);
 
         for (int i = 0; i < proto.Upvalues.Length; i++)
         {
@@ -76,34 +76,34 @@ public partial class LuaState
             var index = upValue.Idx;
             // 当前函数局部变量
             if(upValue.Instack == 1){
-                if(stack.OpenUpvalues == null){
-                    stack.OpenUpvalues = new Dictionary<int,Upvalue>();
+                if(Stack.OpenUpvalues == null){
+                    Stack.OpenUpvalues = new Dictionary<int,Upvalue>();
                 }
                 // 捕获的外围局部变量还在栈上
-                if(stack.OpenUpvalues.ContainsKey(index)){
-                    closure.Upvalues[i] = stack.OpenUpvalues[index];
+                if(Stack.OpenUpvalues.ContainsKey(index)){
+                    closure.Upvalues[i] = Stack.OpenUpvalues[index];
                 }
                 else{
-                    closure.Upvalues[i] = new Upvalue{Value = stack.Slots[index]};
-                    stack.OpenUpvalues[index] = closure.Upvalues[i];
+                    closure.Upvalues[i] = new Upvalue{Value = Stack.Slots[index]};
+                    Stack.OpenUpvalues[index] = closure.Upvalues[i];
                 }
             }
             // 更外围函数局部变量
             else{
-                closure.Upvalues[i] = stack.Closure.Upvalues[index];
+                closure.Upvalues[i] = Stack.Closure.Upvalues[index];
             }
         }
     }
 
     public void CloseUpvalues(int n)
     {
-        var openValues = stack.OpenUpvalues;
+        var openValues = Stack.OpenUpvalues;
         foreach(var (key,value) in openValues){
             if(key >= n - 1)
             {
                var val = value.Value;
                value.Value = val;
-               stack.OpenUpvalues.Remove(key);
+               Stack.OpenUpvalues.Remove(key);
             }
         }
     }

@@ -10,36 +10,48 @@ public partial class LuaState
     /// <param name="idx">表在栈中的位置</param>
     public void SetTable(int idx)
     {
-        var value = stack.Pop();
-        var key = stack.Pop();
+        var t = Stack.Get(idx);
+        var value = Stack.Pop();
+        var key = Stack.Pop();
         
-        _setTableInternal(idx, key, value);
+        _setTableInternal(t, key, value,false);
     }
 
     /// <summary>
     /// 表设置核心方法
     /// </summary>
-    /// <param name="tableObj">表对象</param>
+    /// <param name="table">表对象</param>
     /// <param name="key">键</param>
     /// <param name="value">值</param>
-    private void _setTableInternal(int idx, object key, object value)
+    /// <param name="isRaw">是否为原始表</param>
+    private void _setTableInternal(object tableObj, object key, object value,bool isRaw)
     {
-        object v = stack.Get(idx);
-        if(v is not LuaTable table)
+        if(tableObj is LuaTable table)
         {
-            throw new InvalidOperationException("操作对象不是表类型");
+            if(isRaw || value != null || !table.HasMetafield("__newindex")){
+                table.Put(key, value);
+                return;
+            }
         }
-        table.Put(key, value);
-        stack.Set(idx, table);
-    }
-
-    private void _setTableInternal(object table, object key, object value)
-    {
-        if(table is not LuaTable luaTable)
-        {
-            throw new InvalidOperationException("操作对象不是表类型");
+        // 调用元方法
+        if(!isRaw){
+            var mf = LuaValue.GetMetafield(tableObj,"__newindex",this);
+            if(mf != null){
+                switch(mf){
+                    case LuaTable mTable:
+                        _setTableInternal(mTable,key,value,false);
+                        return;
+                    case LuaClosure closure:
+                        Stack.Push(mf);
+                        Stack.Push(tableObj);
+                        Stack.Push(key);
+                        Stack.Push(value);
+                        Call(3,0);
+                        return;
+                }
+            }
         }
-        luaTable.Put(key, value);
+        throw new InvalidOperationException("无法设置表值");
     }
 
     /// <summary>
@@ -49,8 +61,9 @@ public partial class LuaState
     /// <param name="key">字符串键</param>
     public void SetField(int idx, string key)
     {
-        var value = stack.Pop();
-        _setTableInternal(idx, key, value);
+        var t = Stack.Get(idx);
+        var value = Stack.Pop();
+        _setTableInternal(t, key, value,false);
     }
 
     /// <summary>
@@ -60,20 +73,42 @@ public partial class LuaState
     /// <param name="key">整数键（1-based）</param>
     public void SetI(int idx, long key)
     {
-        var value = stack.Pop();
-        _setTableInternal(idx, key, value);
+        var t = Stack.Get(idx);
+        var value = Stack.Pop();
+        _setTableInternal(t, key, value,false);
     }
 
     public void SetGlobal(string name)
     {
         var table = Registry.Get(Consts.LUA_RIDX_GLOBALS);
-        var value = stack.Pop();
-        _setTableInternal(table,name,value);
+        var value = Stack.Pop();
+        _setTableInternal(table,name,value,false);
     }
 
     public void Register(string name,CsharpFunction func)
     {
         PushCSharpFunction(func);
         SetGlobal(name);
+    }
+
+    /// <summary>
+    /// 设置元表
+    /// </summary>
+    /// <param name="idx"></param>
+    /// <exception cref="InvalidOperationException"></exception>
+    public void SetMetatable(int idx)
+    {
+        var val = Stack.Get(idx);
+        var mtVal = Stack.Pop();
+
+        if(mtVal == null){
+            LuaValue.SetMetatable(val,null,this);
+        }
+        else if(mtVal is LuaTable mt){
+            LuaValue.SetMetatable(val,mt,this);
+        }
+        else{
+            throw new InvalidOperationException("not a table!");
+        }
     }
 }

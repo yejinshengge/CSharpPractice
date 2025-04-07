@@ -114,5 +114,83 @@ namespace CSharpToLua.State
             
             return (0, false);
         }
+
+        /// <summary>
+        /// 设置元表
+        /// </summary>
+        /// <param name="val"></param>
+        /// <param name="metatable"></param>
+        /// <param name="ls"></param>
+        public static void SetMetatable(object val,LuaTable metatable,LuaState ls)
+        {
+            if(val is LuaTable t)
+            {
+                t.Metatable = metatable;
+                return;
+            }
+            
+            var key = "_MT" + TypeOf(val);
+            ls.Registry.Put(key,metatable);
+        }
+
+        /// <summary>
+        /// 获取元表
+        /// </summary>
+        /// <param name="val"></param>
+        /// <param name="ls"></param>
+        /// <returns></returns>
+        public static LuaTable GetMetatable(object val,LuaState ls)
+        {
+            if(val is LuaTable t)
+                return t.Metatable;
+            var key = "_MT" + TypeOf(val);
+            var metatable = ls.Registry.Get(key);
+            return metatable as LuaTable;
+        }
+
+        /// <summary>
+        /// 调用元方法
+        /// </summary>
+        /// <param name="a">第一个操作数</param>
+        /// <param name="b">第二个操作数</param>
+        /// <param name="mmName">元方法名称</param>
+        /// <param name="ls">Lua状态机</param>
+        /// <returns>调用结果和是否成功的标志</returns>
+        public static (object, bool) CallMetamethod(object a, object b, string mmName, LuaState ls)
+        {
+            object mm = GetMetafield(a, mmName, ls);
+            if (mm == null)
+            {
+                mm = GetMetafield(b, mmName, ls);
+                if (mm == null)
+                {
+                    return (null, false);
+                }
+            }
+            
+            ls.Stack.Check(4);
+            ls.Stack.Push(mm);
+            ls.Stack.Push(a);
+            ls.Stack.Push(b);
+            ls.Call(2, 1);
+            return (ls.Stack.Pop(), true);
+        }
+
+        /// <summary>
+        /// 获取元字段
+        /// </summary>
+        /// <param name="val">操作数</param>
+        /// <param name="fieldName">字段名称</param>
+        /// <param name="ls">Lua状态机</param>
+        /// <returns>元字段值</returns>
+        public static object GetMetafield(object val, string fieldName, LuaState ls)
+        {
+            var mt = GetMetatable(val, ls);
+            if (mt != null)
+            {
+                return mt.Get(fieldName);
+            }
+            return null;
+        }
     }
 }

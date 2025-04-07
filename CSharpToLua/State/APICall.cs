@@ -23,7 +23,7 @@ public partial class LuaState
         LuaClosure closure = new LuaClosure(proto);
         
         // 将闭包压入栈顶
-        stack.Push(closure);
+        Stack.Push(closure);
 
         // Upvalue初始化
         if(proto.Upvalues.Length > 0){
@@ -44,8 +44,18 @@ public partial class LuaState
     public void Call(int nArgs, int nResults)
     {
         // 获取函数对象（从栈顶向下数第nArgs+1个元素）
-        var val = stack.Get(-(nArgs + 1));
-        
+        var val = Stack.Get(-(nArgs + 1));
+        // 调用元方法
+        if(val is not LuaClosure){
+            var mf = LuaValue.GetMetafield(val,"__call",this);
+            if(mf is LuaClosure){
+                Stack.Push(val);
+                Insert(-(nArgs + 2));
+                nArgs+=1;
+                val = mf;
+            }
+        }
+
         // 检查是否为Lua闭包
         if (val is LuaClosure closure)
         {
@@ -84,7 +94,7 @@ public partial class LuaState
         newStack.Closure = closure;
         
         // 处理函数参数
-        var funcAndArgs = stack.PopN(nArgs + 1);
+        var funcAndArgs = Stack.PopN(nArgs + 1);
         var args = funcAndArgs.Skip(1).ToArray();
         newStack.PushN(args, nParams);
         newStack.Top = nRegs;
@@ -108,8 +118,8 @@ public partial class LuaState
         if (nResults != 0)
         {
             var results = newStack.PopN(newStack.Top - nRegs);
-            stack.Check(results.Length);
-            stack.PushN(results, nResults);
+            Stack.Check(results.Length);
+            Stack.PushN(results, nResults);
         }
     }
 
@@ -125,9 +135,9 @@ public partial class LuaState
         newStack.Closure = closure;
 
         // 处理函数参数
-        var args = stack.PopN(nArgs);
+        var args = Stack.PopN(nArgs);
         newStack.PushN(args, nArgs);
-        stack.Pop();
+        Stack.Pop();
 
         PushLuaStack(newStack);
         int r = closure.CSharpFunction(this);
@@ -137,8 +147,8 @@ public partial class LuaState
         if(nResults != 0)
         {
             var results = newStack.PopN(r);
-            stack.Check(results.Length);
-            stack.PushN(results, nResults);
+            Stack.Check(results.Length);
+            Stack.PushN(results, nResults);
         }
     }
 

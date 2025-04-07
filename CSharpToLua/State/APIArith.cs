@@ -38,32 +38,37 @@ public partial class LuaState
     {
         public Func<long, long, long> IntegerFunc;
         public Func<double, double, double> FloatFunc;
+        /// <summary>
+        /// 元方法名
+        /// </summary>
+        public string MetaMethod;
 
-        public Operator(Func<long, long, long> integerFunc,
+        public Operator(string metaMethod,Func<long, long, long> integerFunc,
                         Func<double, double, double> floatFunc)
         {
             IntegerFunc = integerFunc;
             FloatFunc = floatFunc;
+            MetaMethod = metaMethod;
         }
     }
 
     // 运算符表
     private static readonly Operator[] operators = new Operator[]
     {
-            new Operator(IAdd, FAdd),  // LUA_OPADD
-            new Operator(ISub, FSub),  // LUA_OPSUB
-            new Operator(IMul, FMul),  // LUA_OPMUL
-            new Operator(IMod, FMod),  // LUA_OPMOD
-            new Operator(null, Pow),   // LUA_OPPOW
-            new Operator(null, Div),   // LUA_OPDIV
-            new Operator(IIDiv, FIDiv),// LUA_OPIDIV
-            new Operator(BAnd, null),  // LUA_OPBAND
-            new Operator(BOr, null),   // LUA_OPBOR
-            new Operator(BXor, null),  // LUA_OPBXOR
-            new Operator(Shl, null),   // LUA_OPSHL
-            new Operator(Shr, null),   // LUA_OPSHR
-            new Operator(IUnm, FUnm),  // LUA_OPUNM
-            new Operator(BNot, null)   // LUA_OPBNOT
+        new Operator("__add", IAdd, FAdd),  // LUA_OPADD
+        new Operator("__sub", ISub, FSub),  // LUA_OPSUB
+        new Operator("__mul", IMul, FMul),  // LUA_OPMUL
+        new Operator("__mod", IMod, FMod),  // LUA_OPMOD
+        new Operator("__pow", null, Pow),   // LUA_OPPOW
+        new Operator("__div", null, Div),   // LUA_OPDIV
+        new Operator("__idiv", IIDiv, FIDiv),// LUA_OPIDIV
+        new Operator("__band", BAnd, null),  // LUA_OPBAND
+        new Operator("__bor", BOr, null),   // LUA_OPBOR
+        new Operator("__bxor", BXor, null),  // LUA_OPBXOR
+        new Operator("__shl", Shl, null),   // LUA_OPSHL
+        new Operator("__shr", Shr, null),   // LUA_OPSHR
+        new Operator("__unm", IUnm, FUnm),  // LUA_OPUNM
+        new Operator("__bnot", BNot, null)   // LUA_OPBNOT
     };
 
     /// <summary>
@@ -71,12 +76,12 @@ public partial class LuaState
     /// </summary>
     public void Arith(ArithOp op)
     {
-        object b = stack.Pop();
+        object b = Stack.Pop();
         object a;
 
         if (op != ArithOp.LUA_OPUNM && op != ArithOp.LUA_OPBNOT)
         {
-            a = stack.Pop();
+            a = Stack.Pop();
         }
         else
         {
@@ -88,12 +93,11 @@ public partial class LuaState
 
         if (result != null)
         {
-            stack.Push(result);
+            Stack.Push(result);
+            return;
         }
-        else
-        {
-            throw new ArithmeticException("算术运算错误");
-        }
+        // 尝试从元表中获取元方法
+        var metaMethod = oper.MetaMethod;
     }
 
     private object PerformArith(object a, object b, Operator oper)

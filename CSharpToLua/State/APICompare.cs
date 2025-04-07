@@ -7,26 +7,26 @@ namespace CSharpToLua.State
     {
         public bool Compare(int idx1, int idx2, CompareOp op)
         {
-            object a = stack.Get(idx1);
-            object b = stack.Get(idx2);
+            object a = Stack.Get(idx1);
+            object b = Stack.Get(idx2);
 
             switch (op)
             {
                 // ==
                 case CompareOp.LUA_OPEQ:
-                    return Eq(a, b);
+                    return Eq(a, b,this);
                 // <
                 case CompareOp.LUA_OPLT:
-                    return Lt(a, b);
+                    return Lt(a, b,this);
                 // <=
                 case CompareOp.LUA_OPLE:
-                    return Le(a, b);
+                    return Le(a, b,this);
                 default:
                     throw new ArgumentException("无效的比较操作符");
             }
         }
 
-        private bool Eq(object a, object b)
+        private bool Eq(object a, object b,LuaState ls)
         {
             if (a == null)
                 return b == null;
@@ -51,12 +51,21 @@ namespace CSharpToLua.State
                         long longB => doubleA == longB,
                         _ => false
                     };
+                // 元方法
+                case LuaTable luaTableA:
+                    if(b is LuaTable luaTableB && luaTableA != luaTableB && ls != null){
+                        var (res,ok) = LuaValue.CallMetamethod(luaTableA,luaTableB,"__eq",ls);
+                        if(ok){
+                            return LuaValue.ToBoolean(res);
+                        }
+                    }
+                    return a == b;
                 default:
                     return a.Equals(b);
             }
         }
 
-        private bool Lt(object a, object b)
+        private bool Lt(object a, object b,LuaState ls)
         {
             if (a is string strA && b is string strB)
                 return string.Compare(strA, strB, StringComparison.Ordinal) < 0;
@@ -80,11 +89,16 @@ namespace CSharpToLua.State
                     _ => throw new ArgumentException("无法比较的类型")
                 };
             }
+            // 元方法
+            var (res,ok) = LuaValue.CallMetamethod(a,b,"__lt",ls);
+            if(ok){
+                return LuaValue.ToBoolean(res);
+            }
 
             throw new ArgumentException("比较错误：不支持的类型");
         }
 
-        private bool Le(object a, object b)
+        private bool Le(object a, object b,LuaState ls)
         {
             if (a is string strA && b is string strB)
                 return string.Compare(strA, strB, StringComparison.Ordinal) <= 0;
@@ -108,7 +122,15 @@ namespace CSharpToLua.State
                     _ => throw new ArgumentException("无法比较的类型")
                 };
             }
-
+            // 元方法
+            var (res,ok) = LuaValue.CallMetamethod(a,b,"__le",ls);
+            if(ok){
+                return LuaValue.ToBoolean(res);
+            }
+            var (res2,ok2) = LuaValue.CallMetamethod(b,a,"__lt",ls);
+            if(ok2){
+                return !LuaValue.ToBoolean(res2);
+            }
             throw new ArgumentException("比较错误：不支持的类型");
         }
     }
