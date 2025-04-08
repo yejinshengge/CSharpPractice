@@ -200,10 +200,10 @@ public class LuaStack
         {
             Slots.Reverse(from, to - from + 1);
         }
-        else if(to < from)
-        {
-            Slots.Reverse(to, from - to + 1);
-        }
+        // else if(to < from)
+        // {
+        //     Slots.Reverse(to, from - to + 1);
+        // }
     }
 
     /// <summary>

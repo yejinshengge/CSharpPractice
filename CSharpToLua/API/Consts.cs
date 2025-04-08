@@ -71,7 +71,7 @@ namespace CSharpToLua.API;
         /// </summary>
         public const long LUA_RIDX_GLOBALS = 2;
 
-        public const bool OPEN_LOG = true;
+        public const bool OPEN_LOG = false;
 
     }
 
