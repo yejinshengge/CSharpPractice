@@ -98,6 +98,12 @@ public partial class LuaState
         }
         // 尝试从元表中获取元方法
         var metaMethod = oper.MetaMethod;
+        var (result2,ok) = LuaValue.CallMetamethod(a, b, metaMethod, this);
+        if(ok){
+            Stack.Push(result2);
+            return;
+        }
+        throw new InvalidOperationException("无法执行算术运算");
     }
 
     private object PerformArith(object a, object b, Operator oper)

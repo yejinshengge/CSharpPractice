@@ -151,7 +151,7 @@ public class LuaStack
             var index = Consts.LUA_REGISTRYINDEX - idx - 1;
             if(Closure == null || index >= Closure.Upvalues.Length)
                 return null;
-            return Closure.Upvalues[index].Value;
+            return Closure.Upvalues[index].Get();
         }
         // 注册表伪索引
         if(idx == Consts.LUA_REGISTRYINDEX)
@@ -171,7 +171,7 @@ public class LuaStack
             var index = Consts.LUA_REGISTRYINDEX - idx - 1;
             if(Closure == null || index >= Closure.Upvalues.Length)
                 return;
-            Closure.Upvalues[index].Value = val;
+            Closure.Upvalues[index].Set(val);
             return;
         }
         // 注册表伪索引

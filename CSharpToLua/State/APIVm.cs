@@ -55,7 +55,7 @@ public partial class LuaState
         {
             n = Stack.VarArgs.Count;
         }
-        
+
         Stack.Check(n);
         Stack.PushN(Stack.VarArgs.ToArray(), n);
     }
@@ -75,21 +75,26 @@ public partial class LuaState
             var upValue = proto.Upvalues[i];
             var index = upValue.Idx;
             // 当前函数局部变量
-            if(upValue.Instack == 1){
-                if(Stack.OpenUpvalues == null){
-                    Stack.OpenUpvalues = new Dictionary<int,Upvalue>();
+            if (upValue.Instack == 1)
+            {
+                if (Stack.OpenUpvalues == null)
+                {
+                    Stack.OpenUpvalues = new Dictionary<int, Upvalue>();
                 }
                 // 捕获的外围局部变量还在栈上
-                if(Stack.OpenUpvalues.ContainsKey(index)){
+                if (Stack.OpenUpvalues.ContainsKey(index))
+                {
                     closure.Upvalues[i] = Stack.OpenUpvalues[index];
                 }
-                else{
-                    closure.Upvalues[i] = new Upvalue{Value = Stack.Slots[index]};
+                else
+                {
+                    closure.Upvalues[i] = new Upvalue(Stack, index);
                     Stack.OpenUpvalues[index] = closure.Upvalues[i];
                 }
             }
             // 更外围函数局部变量
-            else{
+            else
+            {
                 closure.Upvalues[i] = Stack.Closure.Upvalues[index];
             }
         }
@@ -97,13 +102,16 @@ public partial class LuaState
 
     public void CloseUpvalues(int n)
     {
-        var openValues = Stack.OpenUpvalues;
-        foreach(var (key,value) in openValues){
-            if(key >= n - 1)
+        if (Stack.OpenUpvalues != null)
+        {
+            for (var i = 0; i < Stack.OpenUpvalues.Count; i++)
             {
-               var val = value.Value;
-               value.Value = val;
-               Stack.OpenUpvalues.Remove(key);
+                Upvalue uv = Stack.OpenUpvalues[i];
+                if (uv.Index >= n - 1)
+                {
+                    uv.Migrate();
+                    Stack.OpenUpvalues.Remove(i);
+                }
             }
         }
     }

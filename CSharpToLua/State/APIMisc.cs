@@ -60,5 +60,24 @@ namespace CSharpToLua.State
             }
             // n == 1时不执行任何操作
         }
+
+        /// <summary>
+        /// 获取长度(不考虑元表)
+        /// </summary>
+        /// <param name="idx"></param>
+        /// <returns></returns>
+        public uint RawLen(int idx)
+        {
+            var val = Stack.Get(idx);
+            switch (val)
+            {
+                case string valStr:
+                    return (uint) valStr.Length;
+                case LuaTable luaTable:
+                    return (uint) luaTable.Length;
+                default:
+                    return 0;
+            }
+        }
     }
 }

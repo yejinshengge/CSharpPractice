@@ -31,9 +31,9 @@ public partial class LuaState : ILuaState, ILuaVm
     /// <summary>
     /// 构造函数，初始化Lua栈
     /// </summary>
-    public LuaState()
+    public LuaState():this(Consts.LUA_MINSTACK)
     {
-        new LuaState(Consts.LUA_MINSTACK);
+
     }
 
 

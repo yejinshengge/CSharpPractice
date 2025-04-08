@@ -3,11 +3,6 @@ using CSharpToLua.API;
 
 namespace CSharpToLua.State;
 
-public class Upvalue
-{
-    internal object Value;
-}
-
 /// <summary>
 /// Lua闭包实现类
 /// 功能：封装函数原型，用于执行Lua代码

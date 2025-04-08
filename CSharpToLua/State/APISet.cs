@@ -13,8 +13,8 @@ public partial class LuaState
         var t = Stack.Get(idx);
         var value = Stack.Pop();
         var key = Stack.Pop();
-        
-        _setTableInternal(t, key, value,false);
+
+        _setTableInternal(t, key, value, false);
     }
 
     /// <summary>
@@ -24,29 +24,33 @@ public partial class LuaState
     /// <param name="key">键</param>
     /// <param name="value">值</param>
     /// <param name="isRaw">是否为原始表</param>
-    private void _setTableInternal(object tableObj, object key, object value,bool isRaw)
+    private void _setTableInternal(object tableObj, object key, object value, bool isRaw)
     {
-        if(tableObj is LuaTable table)
+        if (tableObj is LuaTable table)
         {
-            if(isRaw || value != null || !table.HasMetafield("__newindex")){
+            if (isRaw || table.Get(key) != null || !table.HasMetafield("__newindex"))
+            {
                 table.Put(key, value);
                 return;
             }
         }
         // 调用元方法
-        if(!isRaw){
-            var mf = LuaValue.GetMetafield(tableObj,"__newindex",this);
-            if(mf != null){
-                switch(mf){
+        if (!isRaw)
+        {
+            var mf = LuaValue.GetMetafield(tableObj, "__newindex", this);
+            if (mf != null)
+            {
+                switch (mf)
+                {
                     case LuaTable mTable:
-                        _setTableInternal(mTable,key,value,false);
+                        _setTableInternal(mTable, key, value, false);
                         return;
                     case LuaClosure closure:
                         Stack.Push(mf);
                         Stack.Push(tableObj);
                         Stack.Push(key);
                         Stack.Push(value);
-                        Call(3,0);
+                        Call(3, 0);
                         return;
                 }
             }
@@ -63,7 +67,7 @@ public partial class LuaState
     {
         var t = Stack.Get(idx);
         var value = Stack.Pop();
-        _setTableInternal(t, key, value,false);
+        _setTableInternal(t, key, value, false);
     }
 
     /// <summary>
@@ -75,17 +79,17 @@ public partial class LuaState
     {
         var t = Stack.Get(idx);
         var value = Stack.Pop();
-        _setTableInternal(t, key, value,false);
+        _setTableInternal(t, key, value, false);
     }
 
     public void SetGlobal(string name)
     {
         var table = Registry.Get(Consts.LUA_RIDX_GLOBALS);
         var value = Stack.Pop();
-        _setTableInternal(table,name,value,false);
+        _setTableInternal(table, name, value, false);
     }
 
-    public void Register(string name,CsharpFunction func)
+    public void Register(string name, CsharpFunction func)
     {
         PushCSharpFunction(func);
         SetGlobal(name);
@@ -101,14 +105,41 @@ public partial class LuaState
         var val = Stack.Get(idx);
         var mtVal = Stack.Pop();
 
-        if(mtVal == null){
-            LuaValue.SetMetatable(val,null,this);
+        if (mtVal == null)
+        {
+            LuaValue.SetMetatable(val, null, this);
         }
-        else if(mtVal is LuaTable mt){
-            LuaValue.SetMetatable(val,mt,this);
+        else if (mtVal is LuaTable mt)
+        {
+            LuaValue.SetMetatable(val, mt, this);
         }
-        else{
+        else
+        {
             throw new InvalidOperationException("not a table!");
         }
+    }
+
+    /// <summary>
+    /// 设置表值(不考虑元表)
+    /// </summary>
+    /// <param name="idx"></param>
+    public void RawSet(int idx)
+    {
+        var t = Stack.Get(idx);
+        var v = Stack.Pop();
+        var k = Stack.Pop();
+        _setTableInternal(t, k, v, true);
+    }
+
+    /// <summary>
+    /// 设置表值(不考虑元表)
+    /// </summary>
+    /// <param name="idx"></param>
+    /// <param name="i"></param>
+    public void RawSetI(int idx, long i)
+    {
+        var t = Stack.Get(idx);
+        var v = Stack.Pop();
+        _setTableInternal(t, i, v, true);
     }
 }

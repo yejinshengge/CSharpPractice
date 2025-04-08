@@ -30,29 +30,33 @@ public partial class LuaState
     /// <param name="key">查询键</param>
     /// <param name="isRaw">是否为原始表</param>
     /// <returns>值的Lua类型</returns>
-    private LuaType _getTableInternal(object tableObj, object key,bool isRaw)
+    private LuaType _getTableInternal(object tableObj, object key, bool isRaw)
     {
         if (tableObj is LuaTable table)
         {
             var value = table.Get(key);
-            if(isRaw || value != null || !table.HasMetafield("__index")){
+            if (isRaw || value != null || !table.HasMetafield("__index"))
+            {
                 Stack.Push(value);
                 return LuaValue.TypeOf(value);
             }
         }
 
         // 调用元方法
-        if(!isRaw){
-            var mf = LuaValue.GetMetafield(tableObj,"__index",this);
-            if(mf != null){
-                switch(mf){
+        if (!isRaw)
+        {
+            var mf = LuaValue.GetMetafield(tableObj, "__index", this);
+            if (mf != null)
+            {
+                switch (mf)
+                {
                     case LuaTable mTable:
-                        return _getTableInternal(mTable,key,false);
+                        return _getTableInternal(mTable, key, false);
                     case LuaClosure closure:
-                        Stack.Push(mf);
+                        Stack.Push(closure);
                         Stack.Push(tableObj);
                         Stack.Push(key);
-                        Call(2,1);
+                        Call(2, 1);
                         var val = Stack.Get(-1);
                         return LuaValue.TypeOf(val);
                 }
@@ -70,7 +74,7 @@ public partial class LuaState
     {
         var table = Stack.Get(idx);
         var key = Stack.Pop();
-        return _getTableInternal(table, key,false);
+        return _getTableInternal(table, key, false);
     }
 
     /// <summary>
@@ -82,7 +86,7 @@ public partial class LuaState
     public LuaType GetField(int idx, string key)
     {
         object v = Stack.Get(idx);
-        return _getTableInternal(v,key,false);
+        return _getTableInternal(v, key, false);
     }
 
     /// <summary>
@@ -94,7 +98,7 @@ public partial class LuaState
     public LuaType GetI(int idx, long key)
     {
         object v = Stack.Get(idx);
-        return _getTableInternal(v,key,false);
+        return _getTableInternal(v, key, false);
     }
 
     /// <summary>
@@ -105,9 +109,9 @@ public partial class LuaState
     public LuaType GetGlobal(string name)
     {
         var table = Registry.Get(Consts.LUA_RIDX_GLOBALS);
-        return _getTableInternal(table,name,false);
+        return _getTableInternal(table, name, false);
     }
-    
+
     /// <summary>
     /// 获取元表
     /// </summary>
@@ -116,12 +120,36 @@ public partial class LuaState
     public bool GetMetaTable(int idx)
     {
         var val = Stack.Get(idx);
-        var mt = LuaValue.GetMetatable(val,this);
-        if(mt != null){
+        var mt = LuaValue.GetMetatable(val, this);
+        if (mt != null)
+        {
             Stack.Push(mt);
             return true;
         }
         return false;
     }
-    
+
+    /// <summary>
+    /// 获取表值(不考虑元表)
+    /// </summary>
+    /// <param name="idx"></param>
+    /// <returns></returns>
+    public LuaType RawGet(int idx)
+    {
+        var t = Stack.Get(idx);
+        var k = Stack.Pop();
+        return _getTableInternal(t, k, true);
+    }
+
+    /// <summary>
+    /// 获取表值(不考虑元表)
+    /// </summary>
+    /// <param name="idx"></param>
+    /// <param name="i"></param>
+    /// <returns></returns>
+    public LuaType RawGetI(int idx, long i)
+    {
+        var t = Stack.Get(idx);
+        return _getTableInternal(t, i, true);
+    }
 }

@@ -7,6 +7,10 @@ namespace CSharpToLua.State
     {
         public bool Compare(int idx1, int idx2, CompareOp op)
         {
+            if (!Stack.IsValid(idx1) || !Stack.IsValid(idx2))
+            {
+                return false;
+            }
             object a = Stack.Get(idx1);
             object b = Stack.Get(idx2);
 
@@ -132,6 +136,24 @@ namespace CSharpToLua.State
                 return !LuaValue.ToBoolean(res2);
             }
             throw new ArgumentException("比较错误：不支持的类型");
+        }
+
+        /// <summary>
+        /// 比较两个值(不考虑元表)
+        /// </summary>
+        /// <param name="idx1"></param>
+        /// <param name="idx2"></param>
+        /// <returns></returns>
+        public bool RawEqual(int idx1, int idx2)
+        {
+            if (!Stack.IsValid(idx1) || !Stack.IsValid(idx2))
+            {
+                return false;
+            }
+
+            var a = Stack.Get(idx1);
+            var b = Stack.Get(idx2);
+            return Eq(a, b,null);
         }
     }
 }

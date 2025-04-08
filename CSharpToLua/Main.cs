@@ -12,11 +12,13 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        string url = "D:\\CSharpPractice\\CSharpToLua\\LuaSource\\bin\\upvaluetest.out";
+        string url = "D:\\CSharpPractice\\CSharpToLua\\LuaSource\\bin\\metatable.out";
         // 读取文件内容
         byte[] data = File.ReadAllBytes(url);
         LuaState ls = new LuaState(20);
         ls.Register("print",Print);
+        ls.Register("getmetatable",_getMetaTable);
+        ls.Register("setmetatable",_setMetaTable);
         ls.Load(data, "chunk", "b");
         ls.Call(0, 0);
 
@@ -362,4 +364,17 @@ public class Program
         Console.WriteLine();
         return 0;
     }
+
+    private static int _getMetaTable(ILuaState state){
+        if(!state.GetMetaTable(1)){
+            state.PushNil();
+        }
+        return 1;
+    }
+
+    private static int _setMetaTable(ILuaState state){
+        state.SetMetatable(1);
+        return 1;
+    }
+    
 }

@@ -28,7 +28,7 @@ public partial class LuaState
         // Upvalue初始化
         if(proto.Upvalues.Length > 0){
             var env = Registry.Get(Consts.LUA_RIDX_GLOBALS);
-            closure.Upvalues[0] = new Upvalue{Value = env};
+            closure.Upvalues[0] = new Upvalue(env);
         }
         
         // 返回成功状态码

@@ -43,10 +43,10 @@ public partial class LuaState
     public void PushCSharpClosure(CsharpFunction func,int n)
     {
         var closure = new LuaClosure(func,n);
-        for(int i = 0;i < n;i++)
+        for(int i = n;i > 0;i--)
         {
             var val = Stack.Pop();
-            closure.Upvalues[n-1] = new Upvalue{Value = val};
+            closure.Upvalues[n-1] = new Upvalue(val);
         }
         Stack.Push(closure);
     }
