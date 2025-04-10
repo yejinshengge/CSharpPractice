@@ -17,6 +17,7 @@ public class LeetCode_LCR061
     {
         Heap<List<int>> heap = new Heap<List<int>>(k, 
             (e1, e2) => nums1[e1[0]] + nums2[e1[1]] - nums1[e2[0]] - nums2[e2[1]]);
+        // 先把[0,x]加入堆
         for (int i = 0; i < Math.Min(k,nums2.Length); i++)
         {
             heap.Push(new List<int>(){0,i});
@@ -25,8 +26,14 @@ public class LeetCode_LCR061
         IList<IList<int>> res = new List<IList<int>>();
         while (heap.CurSize > 0 && res.Count < k)
         {
+            // 弹出堆顶元素
             var val = heap.Pop();
+            // 添加到结果
             res.Add(new List<int>(){nums1[val[0]],nums2[val[1]]});
+            // 固定nums2,移动nums1指针
+            // 因为nums1不变,nums2往前的元素已经考虑过
+            // nums1往后移动一位,nums2不变,已经比当前元素大
+            // 所以只需要考虑nums1往后移动一位的情况
             if(val[0] + 1 < nums1.Length)
                 heap.Push(new List<int>(){val[0]+1,val[1]});
         }

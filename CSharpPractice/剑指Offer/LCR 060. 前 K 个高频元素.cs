@@ -32,9 +32,12 @@ public class LeetCode_LCR060
     
     private class Heap
     {
+        // 记录元素本身
         private int[] _arr;
         private int _curSize;
+        // 记录每个元素的出现次数
         private Dictionary<int, int> _valNumDic;// key = val value = num
+        // 记录每个元素在堆中的位置
         private Dictionary<int, int> _valIndexDic;// key = val value = index
         
         public Heap(int size)
@@ -48,6 +51,7 @@ public class LeetCode_LCR060
         public void Add(int val)
         {
             int index = -1;
+            // 如果元素已经存在，则更新出现次数
             if (_valIndexDic.ContainsKey(val))
             {
                 index = _valIndexDic[val];
@@ -55,6 +59,7 @@ public class LeetCode_LCR060
             }
             else
             {
+                // 如果元素不存在，则添加元素
                 index = _curSize++;
                 _valIndexDic.Add(val,index);
                 _valNumDic.Add(val,1);
@@ -80,9 +85,11 @@ public class LeetCode_LCR060
         private void _heapInsert(int index)
         {
             int parent = (index - 1) / 2;
+            // 如果当前元素的出现次数大于父元素的出现次数，则交换位置
             while (_valNumDic[_arr[index]] > _valNumDic[_arr[parent]])
             {
                 (_arr[index], _arr[parent]) = (_arr[parent], _arr[index]);
+                // 更新元素在堆中的位置
                 _valIndexDic[_arr[index]] = index;
                 _valIndexDic[_arr[parent]] = parent;
                 index = parent;
@@ -96,6 +103,8 @@ public class LeetCode_LCR060
             int left = 1;
             while (left < _curSize)
             {
+                
+                // 如果当前元素的出现次数大于子节点的出现次数，则交换位置
                 int bigger = left + 1 < _curSize 
                              && _valNumDic[_arr[left + 1]] > _valNumDic[_arr[left]] 
                     ? left + 1 : left;
@@ -103,6 +112,7 @@ public class LeetCode_LCR060
                 if(index == bigger)
                     return;
                 (_arr[index], _arr[bigger]) = (_arr[bigger], _arr[index]);
+                // 更新元素在堆中的位置
                 _valIndexDic[_arr[index]] = index;
                 _valIndexDic[_arr[bigger]] = bigger;
                 index = bigger;
