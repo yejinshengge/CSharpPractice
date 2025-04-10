@@ -469,6 +469,28 @@ public interface ILuaState
     /// <param name="idx"></param>
     /// <param name="i"></param>
     void RawSetI(int idx, long i);
+
+    /// <summary>
+    /// 根据键获取下一个键值
+    /// </summary>
+    /// <param name="idx"></param>
+    /// <returns></returns>
+    bool Next(int idx);
+
+    /// <summary>
+    /// 抛出异常
+    /// </summary>
+    /// <returns></returns>
+    int Error();
+
+    /// <summary>
+    /// 安全模式调用函数
+    /// </summary>
+    /// <param name="nArgs"></param>
+    /// <param name="nResults"></param>
+    /// <param name="msgh"></param>
+    /// <returns></returns>
+    int PCall(int nArgs,int nResults,int msgh);
 }
 
 /// <summary>

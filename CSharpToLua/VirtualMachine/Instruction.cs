@@ -108,9 +108,9 @@ public readonly struct Instruction
         }
 
         // 获取指令参数并格式化为日志字符串
-        string paramsStr = FormatInstructionParams(opCode, info.OpMode);
         if(Consts.OPEN_LOG)
         {
+            string paramsStr = FormatInstructionParams(opCode, info.OpMode);
             Console.WriteLine("____________________________________________");
             Console.WriteLine($"执行指令: {info.Name} {paramsStr}");
         }

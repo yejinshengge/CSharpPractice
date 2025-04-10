@@ -79,5 +79,30 @@ namespace CSharpToLua.State
                     return 0;
             }
         }
+
+        public bool Next(int idx)
+        {
+            var val = Stack.Get(idx);
+            if(val is not LuaTable t){
+                throw new System.Exception("不是表!");
+            }
+            // 弹出键
+            var key = Stack.Pop();
+            // 获取下一个键
+            var nextKey = t.NextKey(key);
+            if(nextKey == null){
+                return false;
+            }
+            // 压入键和值
+            Stack.Push(nextKey);
+            Stack.Push(t.Get(nextKey));
+            return true;
+        }
+
+        public int Error()
+        {
+            var err = Stack.Pop();
+            throw new System.Exception(err.ToString());
+        }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using CSharpToLua.API;
 using CSharpToLua.Number;
 
 namespace CSharpToLua.State;
@@ -16,6 +17,11 @@ public class LuaTable
 
     // 哈希表部分，用于存储非连续键值对
     private Dictionary<object, object> _map;
+    // 所有键值
+    private Dictionary<object, object> _keys;
+
+    // 键是否发生了变化
+    private bool _changed;
 
     // 元表
     public LuaTable Metatable;
@@ -221,6 +227,46 @@ public class LuaTable
     public bool HasMetafield(string fieldName)
     {
         return Metatable != null && Metatable.Get(fieldName) != null;
+    }
+
+    public object NextKey(object key)
+    {
+        if(_keys == null || key == null && _changed)
+        {
+            _initKeys();
+            _changed = false;
+        }
+        _keys.TryGetValue(key??Consts.LUA_NULL,out var val);
+        return val;
+    }
+    // 初始化键值
+    private void _initKeys()
+    {
+        _keys = new Dictionary<object, object>();
+        object key = Consts.LUA_NULL;
+        // 数组部分
+        if(_arr != null)
+        {
+            for(int i = 0;i < _arr.Count;i++)
+            {
+                if(_arr[i] != null){
+                    long v = i + 1;
+                    _keys[key] = v;
+                    key = v;
+                }
+            }
+        }
+        if(_map != null)
+        {
+            // 哈希表部分
+            foreach(var (k,v) in _map)
+            {
+                if(v != null){
+                    _keys[key] = k;
+                    key = k;
+                }
+            }
+        }
     }
 }
 

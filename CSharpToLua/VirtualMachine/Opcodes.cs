@@ -303,10 +303,10 @@ public readonly struct OpCodeInfo
         [OpCode.OpForPrep] = new OpCodeInfo(0, 1, OpArgType.OpArgR, OpArgType.OpArgN, InstructionMode.IAsBx, "FORPREP", InstFor.ForPrep),
 
         // 通用for循环调用：R(A+3), ... ,R(A+2+C) = R(A)(R(A+1), R(A+2))
-        [OpCode.OpTForCall] = new OpCodeInfo(0, 0, OpArgType.OpArgN, OpArgType.OpArgU, InstructionMode.IABC, "TFORCALL", null),
+        [OpCode.OpTForCall] = new OpCodeInfo(0, 0, OpArgType.OpArgN, OpArgType.OpArgU, InstructionMode.IABC, "TFORCALL", InstCall.TForCall),
 
         // 通用for循环：if R(A+1) ~= nil then { R(A)=R(A+1); pc += sBx }
-        [OpCode.OpTForLoop] = new OpCodeInfo(0, 1, OpArgType.OpArgR, OpArgType.OpArgN, InstructionMode.IAsBx, "TFORLOOP", null),
+        [OpCode.OpTForLoop] = new OpCodeInfo(0, 1, OpArgType.OpArgR, OpArgType.OpArgN, InstructionMode.IAsBx, "TFORLOOP", InstFor.TForLoop),
 
         // 设置列表元素：R(A)[(C-1)*FPF+i] = R(A+i), 1 <= i <= B
         [OpCode.OpSetList] = new OpCodeInfo(0, 0, OpArgType.OpArgU, OpArgType.OpArgU, InstructionMode.IABC, "SETLIST", InstTable.SetList),

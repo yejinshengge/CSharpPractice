@@ -84,5 +84,24 @@ public static class InstFor
             vm.Copy(a, a + 3);
         }
     }
+
+    /// <summary>
+    /// 实现TFORLOOP指令：遍历表
+    /// </summary>
+    /// <param name="i"></param>
+    /// <param name="vm"></param>
+    public static void TForLoop(Instruction i, ILuaVm vm)
+    {
+        var (a, sBx) = i.AsBx();
+        a+=1;
+        // 返回的第一个值不是nil
+        if(!vm.IsNil(a+1))
+        {
+            // 复制键到val
+            vm.Copy(a+1,a);
+            // 跳转到循环体
+            vm.AddPC(sBx);
+        }
+    }
 }
 

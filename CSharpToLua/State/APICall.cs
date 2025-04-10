@@ -32,7 +32,7 @@ public partial class LuaState
         }
         
         // 返回成功状态码
-        return 0;
+        return (int)ErrorCode.LUA_OK;
     }
 
     /// <summary>
@@ -167,6 +167,30 @@ public partial class LuaState
             // 若执行完毕或遇到返回指令，退出循环
             if (inst.Opcode() == (int)OpCode.OpReturn)
                 break;
+        }
+    }
+
+    public int PCall(int nArgs, int nResults, int msgh)
+    {
+        var caller = Stack;
+        try
+        {
+            Call(nArgs, nResults);
+            return (int)ErrorCode.LUA_OK;
+        }
+        catch (Exception e)
+        {
+            if (msgh != 0)
+            {
+                throw;
+            }
+            // 弹出栈帧直到调用帧
+            while (Stack != caller)
+            {
+                PopLuaStack();
+            }
+            Stack.Push(e.Message);
+            return (int)ErrorCode.LUA_ERRRUN;
         }
     }
 }

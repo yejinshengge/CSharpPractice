@@ -52,6 +52,21 @@ namespace CSharpToLua.API;
         LUA_OPLE = 2      // <=小于等于
     }
 
+    /// <summary>
+    /// 函数加载或执行状态
+    /// </summary>
+    public enum ErrorCode
+    {
+        LUA_OK = 0,
+        LUA_YIELD = 1,
+        LUA_ERRRUN = 2,
+        LUA_ERRSYNTAX = 3,
+        LUA_ERRMEM = 4,
+        LUA_ERRGCMM = 5,
+        LUA_ERRERR = 6,
+        LUA_ERRFILE = 7,
+    }
+
     public static class Consts
     {
         /// <summary>
@@ -71,6 +86,14 @@ namespace CSharpToLua.API;
         /// </summary>
         public const long LUA_RIDX_GLOBALS = 2;
 
+        /// <summary>
+        /// 空值
+        /// </summary>
+        public const string LUA_NULL = "nil";
+
+        /// <summary>
+        /// 是否开启日志
+        /// </summary>
         public const bool OPEN_LOG = false;
 
     }

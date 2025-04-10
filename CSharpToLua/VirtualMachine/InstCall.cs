@@ -233,4 +233,21 @@ public static class InstCall
         // 将方法存储到寄存器a
         vm.Replace(a);
     }
+
+    /// <summary>
+    /// 实现TFORCALL指令：遍历表
+    /// </summary>
+    /// <param name="i"></param>
+    /// <param name="vm"></param>
+    public static void TForCall(Instruction i, ILuaVm vm)
+    {
+        var (a, _, c) = i.ABC();
+        a += 1;
+        // 将三个特殊变量压入栈
+        _pushFuncAndArgs(a, 3, vm);
+        // 调用函数
+        vm.Call(2,c);
+        // 处理返回值
+        _popResults(a+3,c+1,vm);
+    }
 }

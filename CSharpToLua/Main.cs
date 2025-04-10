@@ -12,13 +12,18 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        string url = "D:\\CSharpPractice\\CSharpToLua\\LuaSource\\bin\\metatable.out";
+        string url = "D:\\CSharpPractice\\CSharpToLua\\LuaSource\\bin\\error.out";
         // 读取文件内容
         byte[] data = File.ReadAllBytes(url);
         LuaState ls = new LuaState(20);
         ls.Register("print",Print);
         ls.Register("getmetatable",_getMetaTable);
         ls.Register("setmetatable",_setMetaTable);
+        ls.Register("pairs",_pairs);
+        ls.Register("ipairs",_ipairs);
+        ls.Register("next",_next);
+        ls.Register("pcall",_pCall);
+        ls.Register("error",_error);
         ls.Load(data, "chunk", "b");
         ls.Call(0, 0);
 
@@ -377,4 +382,59 @@ public class Program
         return 1;
     }
     
+    private static int _next(ILuaState state){
+        // 确保足够参数个数
+        state.SetTop(2);
+        // 1处是表，2处是上一个键
+        if(state.Next(1)){
+            return 2;
+        }
+        // 遍历结束
+        state.PushNil();
+        return 1;
+    }
+
+    private static int _pairs(ILuaState state){
+        // 将迭代函数压入栈
+        state.PushCSharpFunction(_next);
+        // 将表压入栈
+        state.PushValue(1);
+        // 将状态变量压入栈(初始为nil)
+        state.PushNil();
+        return 3;
+    }
+
+    private static int _ipairs(ILuaState state){
+        // 将迭代函数压入栈
+        state.PushCSharpFunction(_iPairsAux);
+        // 将表压入栈
+        state.PushValue(1);
+        // 将状态变量压入栈(初始为nil)
+        state.PushInteger(0);
+        return 3;
+    }
+
+    private static int _iPairsAux(ILuaState state){
+        // 状态变量+1
+        var i = state.ToInteger(2)+1;
+        // 压回栈
+        state.PushInteger(i);
+        // 下个值为空,结束循环
+        if(state.GetI(1,i) == LuaType.LUA_TNIL){
+            return 1;
+        }
+        return 2;
+    }
+
+    private static int _error(ILuaState state){
+        return state.Error();
+    }
+
+    private static int _pCall(ILuaState state){
+        var nArgs = state.GetTop() - 1;
+        var status = state.PCall(nArgs,-1,0);
+        state.PushBoolean(status == (int)ErrorCode.LUA_OK);
+        state.Insert(1);
+        return state.GetTop();
+    }
 }
