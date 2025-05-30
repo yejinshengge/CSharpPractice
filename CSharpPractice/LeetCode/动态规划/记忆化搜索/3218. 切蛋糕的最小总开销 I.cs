@@ -9,7 +9,8 @@ public class LeetCode_3218
         Console.WriteLine(obj.MinimumCost(2,2,new []{7},new []{4}));
         Console.WriteLine(obj.MinimumCost(1,1,Array.Empty<int>(),Array.Empty<int>()));
     }
-
+    
+    // 缓存
     private int[][][][] _cache;
     private int[] _horizontalCut;
     private int[] _verticalCut;
@@ -35,26 +36,28 @@ public class LeetCode_3218
         return _doMinimumCost(0,0,m-1,n-1);
     }
     
-    private int _doMinimumCost(int row1, int col1, int row2, int col2)
+    // 切一块蛋糕需要的最小成本
+    private int _doMinimumCost(int x1, int y1, int x2, int y2)
     {
-        if (row1 == row2 && col1 == col2)
+        if (x1 == x2 && y1 == y2)
             return 0;
-        if (_cache[row1][col1][row2][col2] > 0)
-            return _cache[row1][col1][row2][col2];
+        if (_cache[x1][y1][x2][y2] > 0)
+            return _cache[x1][y1][x2][y2];
         int res = int.MaxValue;
-        for (int i = row1; i < row2; i++)
+        // 沿第i行切开
+        for (int i = x1; i < x2; i++)
         {
             res = Math.Min(res,
-                _doMinimumCost(row1, col1, i, col2) + _doMinimumCost(i + 1, col1, row2, col2) + _horizontalCut[i]);
+                _doMinimumCost(x1, y1, i, y2) + _doMinimumCost(i + 1, y1, x2, y2) + _horizontalCut[i]);
         }
-        
-        for (int i = col1; i < col2; i++)
+        // 沿第i列切开
+        for (int i = y1; i < y2; i++)
         {
             res = Math.Min(res,
-                _doMinimumCost(row1, col1, row2, i) + _doMinimumCost(row1, i+1, row2, col2) + _verticalCut[i]);
+                _doMinimumCost(x1, y1, x2, i) + _doMinimumCost(x1, i+1, x2, y2) + _verticalCut[i]);
         }
 
-        _cache[row1][col1][row2][col2] = res;
+        _cache[x1][y1][x2][y2] = res;
         return res;
     }
 }

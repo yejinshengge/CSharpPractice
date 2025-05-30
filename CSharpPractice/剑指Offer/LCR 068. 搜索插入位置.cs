@@ -14,18 +14,20 @@ public class LeetCode_LCR068
     
     public int SearchInsert(int[] nums, int target)
     {
+        // 区间设置为[0,nums.Length)
         int left = 0, right = nums.Length;
+        // left == right没有意义
         while (left < right)
         {
             int mid = (left + right) >> 1;
             if (nums[mid] == target)
                 return mid;
+            // [left,mid)
             if (nums[mid] > target)
                 right = mid;
             else
                 left = mid + 1;
         }
-
         return left;
     }
 }

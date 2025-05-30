@@ -20,12 +20,14 @@ public class LeetCode_3266
         var len = nums.Length;
         Heap heap = new Heap(len);
         int max = 0;
+        // 加入小根堆并找到最大值
         for (int i = 0; i < len; i++)
         {
             max = Math.Max(nums[i],max);
+            // 根据值排序,同时记录下标
             heap.HeapInsert(i,nums[i]);
         }
-
+        // 进行常规替换,直到遇到最大值
         for (;heap.Peek().Item2 < max && k > 0;k--)
         {
             var top = heap.Pop();
@@ -37,7 +39,9 @@ public class LeetCode_3266
         for (int i = 0; i < len; i++)
         {
             var top = heap.Pop();
+            // 前一部分放大k/len+1次,后一部分放大k/len次
             var pow = k / len + (i >= k % len ? 0 : 1);
+            // 快速幂求结果
             res[top.Item1] = (int)(_pow(multiplier, pow) * (top.Item2 % MOD)%MOD);
         }
 
