@@ -17,8 +17,10 @@ public class LeetCode_LCR006
         int left = 0, right = numbers.Length-1;
         while (left < right)
         {
+            // 如果两数之和大于target，则右指针左移
             if (numbers[left] + numbers[right] > target)
                 right--;
+            // 如果两数之和小于target，则左指针右移
             else if (numbers[left] + numbers[right] < target)
                 left++;
             else

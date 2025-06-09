@@ -14,7 +14,9 @@ public class LeetCode_LCR009
         int left = 0, product = 1, sum = 0;
         for (int right = 0; right < nums.Length; right++)
         {
+            // 以右指针结尾的前缀积
             product *= nums[right];
+            // 超过范围依次缩短长度
             while (left <= right && product >= k)
             {
                 product /= nums[left++];

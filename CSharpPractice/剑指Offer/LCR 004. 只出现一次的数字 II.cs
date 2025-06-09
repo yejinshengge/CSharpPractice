@@ -12,6 +12,7 @@ public class LeetCode_LCR004
     public int SingleNumber1(int[] nums)
     {
         int[] arr = new int[32];
+        // 统计每一位1出现的次数
         foreach (var num in nums)
         {
             for (int i = 0; i < 32; i++)
@@ -22,6 +23,7 @@ public class LeetCode_LCR004
         }
 
         int res = 0;
+        // 如果某一位1出现的次数不是3的倍数,则该位是只出现一次的数字的该位
         for (int i = 0; i < 32; i++)
         {
             if (arr[i] % 3 == 1)

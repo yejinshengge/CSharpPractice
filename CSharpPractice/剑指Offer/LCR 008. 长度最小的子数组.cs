@@ -20,12 +20,14 @@ public class LeetCode_LCR008
             if (left == right) sum = nums[left];
             if (sum >= target)
             {
+                // 比target大,左指针右移,记录最小长度
                 minLen = Math.Min(minLen, right - left + 1);
                 sum -= nums[left];
                 left++;
             }
             else
             {
+                // 比target小,右指针右移
                 right++;
                 if(right < nums.Length)
                     sum += nums[right];
@@ -38,6 +40,7 @@ public class LeetCode_LCR008
 
     public int MinSubArrayLen(int target, int[] nums)
     {
+        // 前缀和
         int[] sum = new int[nums.Length+1];
         for (int i = 1; i <= nums.Length; i++)
         {
@@ -47,8 +50,10 @@ public class LeetCode_LCR008
         int minLen = int.MaxValue;
         for (int i = 1; i <= nums.Length; i++)
         {
+            // 因为从i开始找,所以target要加上i-1的前缀和
             int realTarget = target + sum[i-1];
 
+            // 二分法找到第一个≥realTarget
             int left = i, right = nums.Length;
             while (left < right)
             {

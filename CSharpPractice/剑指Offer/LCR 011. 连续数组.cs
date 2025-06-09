@@ -11,6 +11,7 @@ public class LeetCode_LCR011
     
     public int FindMaxLength1(int[] nums)
     {
+        // 计算0和1个数的前缀和
         int[] zero = new int[nums.Length + 1];
         int[] one = new int[nums.Length + 1];
 
@@ -25,6 +26,7 @@ public class LeetCode_LCR011
         {
             for (int j = i+1; j < zero.Length; j++)
             {
+                // 判断区间中的0和1数量是否相同
                 if (zero[j] - zero[i] == one[j] - one[i])
                     res = Math.Max(res, j - i);
             }
@@ -36,13 +38,16 @@ public class LeetCode_LCR011
     public int FindMaxLength(int[] nums)
     {
         Dictionary<int, int> dic = new();
+        // 设置成-1是为了处理开头就满足的情况
         dic[0] = -1;
 
         int sum = 0;
         int res = 0;
         for (int i = 0; i < nums.Length; i++)
         {
+            // 把0换成-1
             sum += nums[i] == 0 ? -1 : 1;
+            // 遇到相同的前缀和,说明存在数量相同的1和-1
             if (dic.TryGetValue(sum, out var index))
                 res = Math.Max(res, i - index);
             else

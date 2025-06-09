@@ -15,16 +15,19 @@ public class LeetCode_LCR007
     }
     
     public IList<IList<int>> ThreeSum(int[] nums) {
+        // 排序
         Array.Sort(nums);
         IList<IList<int>> res = new List<IList<int>>();
         
         for (int i = 0; i < nums.Length; i++)
         {
+            // 跳过相同元素避免结果重复
             if(i > 0 && nums[i] == nums[i-1]) continue;
             int cur = nums[i];
             int left = i+1, right = nums.Length - 1;
             while (left < right)
             {
+                // 跳过相同元素避免结果重复
                 if (left > i + 1 && nums[left] == nums[left - 1])
                 {
                     left++;
@@ -36,8 +39,10 @@ public class LeetCode_LCR007
                     right--;
                     continue;
                 }
+                // 如果两数之和大于target，则右指针左移
                 if (nums[left] + nums[right] > -cur)
                     right--;
+                // 如果两数之和小于target，则左指针右移
                 else if (nums[left] + nums[right] < -cur)
                     left++;
                 else

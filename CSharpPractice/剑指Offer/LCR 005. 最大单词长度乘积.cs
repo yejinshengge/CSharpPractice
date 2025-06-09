@@ -51,6 +51,7 @@ public class LeetCode_LCR005
         int[] dic = new int[words.Length];
         for (int i = 0; i < words.Length; i++)
         {
+            // 把存在的位设置成1
             foreach (var c in words[i])
             {
                 dic[i] |= 1 << (c - 'a');
@@ -62,6 +63,7 @@ public class LeetCode_LCR005
         {
             for (int j = i+1; j < words.Length; j++)
             {
+                // 如果两个单词没有相同的字母，则相与为0
                 if ((dic[i] & dic[j]) == 0)
                     maxLen = Math.Max(maxLen, words[i].Length * words[j].Length);
             }

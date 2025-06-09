@@ -20,7 +20,9 @@ public class LeetCode_LCR001
             return int.MaxValue;
         // 统一符号
         bool flag = (a < 0 && b > 0) || (a > 0 && b < 0);
+        // 被除数
         int dividend = a > 0 ? -a : a;
+        // 除数
         int divisor = b > 0 ? -b : b;
         int res = 0;
         while (dividend <= divisor)
@@ -33,7 +35,7 @@ public class LeetCode_LCR001
                 value <<=1;
                 quotient<<=1;
             }
-
+            // 累加商
             res += quotient;
             dividend -= value;
         }
